@@ -4,6 +4,7 @@
 BarentsWatch tilbyr åpne AIS-data fra Kystverket. Dette er en datastrøm med fartøyposisjoner i sanntid, hentet fra et API (Application programming interface) som muliggjør at ulike tjenester automatisk kan hente data. Kystverkets åpne AIS-data er samlet inn fra:
 
 * 90 AIS-basestasjoner på fastlandet og Svalbard ‒ viser kontinuerlige data om skipsbevegelser opptil 40-60 nautiske mil fra kysten.
+
 *5 norske AIS-satellitter – viser trafikk i havområder hvert 90. minutt.
 
 Formålet med Kystverkets innsamling og deling av AIS-data er å legge til rette for sjøsikkerhet, forvaltning av det maritime miljøet og effektiv sjøtransport. Både gjennom tilgjengeliggjøring av disse dataene via BarentsWatch og en planlagt tjeneste for å vise den åpne delen av AIS-informasjon, ønsker vi å gjøre det enklere for allmenheten å følge med på skipstrafikken. 

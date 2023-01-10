@@ -22,7 +22,7 @@ Viser ikke fritidsfartøy under 45 meter.
 ![Bilde av dekningsområdet](https://developer.barentswatch.no/assets/images/OpenAisArea2-c5332d2a6ed8f25fba1b5b064ad72b38.PNG)
 
 
-Flow: 
+Flow: ![NIFI Flow](NIFI-Flow-AIS.JPG)
 
 XML: link her
 

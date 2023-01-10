@@ -1,4 +1,17 @@
-# ais_data
+# Nedlasting av AIS-data som øvingsdatasett til ING3209
+
+## Maskinvare
+VM i Google Cloud. 
+
+| Machine config  |  |
+| ------------- | ------------- |
+| Machine type | e2-medium |
+| CPU platform | Intel Broadwell  |
+| Architecture | x86/64 |
+| OS | Ubuntu 20.04 |
+| Nifi version | 16.3 |
+
+
 
 ## Fartøyposisjoner i sanntid
 BarentsWatch tilbyr åpne AIS-data fra Kystverket. Dette er en datastrøm med fartøyposisjoner i sanntid, hentet fra et API (Application programming interface) som muliggjør at ulike tjenester automatisk kan hente data. Kystverkets åpne AIS-data er samlet inn fra:

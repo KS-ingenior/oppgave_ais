@@ -24,7 +24,7 @@ Formålet med Kystverkets innsamling og deling av AIS-data er å legge til rette
 
 En rekke tjenester fra BarentsWatch viser fartøy i kart. Informasjonen her kommer fra Kystverkets AIS-nettverk langs kysten, og posisjonene oppdateres automatisk. BarentsWatch tilbyr også AIS API-endepunkter for utviklere. Ekstern bruk av Kystverkets AIS-data må krediteres Kystverket. Teknisk informasjon finner du her og generell informasjon her: Åpne data via BarentsWatch
 
-Se også Kystinfo for åpne AIS data. Velg "temalag" i høyre meny, deretter "Sjøtrafikk og AIS". AIS data er også tilgjengelig på følgende IP adresse: `153.44.253.27` port `5631`.
+Se også Kystinfo for åpne AIS data. Velg "temalag" i høyre meny, deretter "Sjøtrafikk og AIS". AIS data er også tilgjengelig på følgende IP adresse: `153.44.253.27` port `5631`. [^1]
 
 ## Begrensningene på åpen AIS-datastrøm:
 
@@ -40,3 +40,6 @@ Flow: ![NIFI Flow](NIFI-Flow-AIS.JPG)
 NiFi template: [Template i XML](AIS-lagre-som-CSV-final.xml)
 
 Nifi tilgjengelig her: http://34.88.85.78:8443/nifi/
+
+
+[^1]: https://www.barentswatch.no/artikler/tilbyr-apne-ais-data/

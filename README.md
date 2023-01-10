@@ -1,6 +1,6 @@
 # Nedlasting av AIS-data som øvingsdatasett til ING3209
 
-## Maskinvare
+### Maskinvare
 VM i Google Cloud. 
 
 | Machine config  |  |
@@ -13,7 +13,7 @@ VM i Google Cloud.
 
 
 
-## Fartøyposisjoner i sanntid
+### Fartøyposisjoner i sanntid
 BarentsWatch tilbyr åpne AIS-data fra Kystverket. Dette er en datastrøm med fartøyposisjoner i sanntid, hentet fra et API (Application programming interface) som muliggjør at ulike tjenester automatisk kan hente data. Kystverkets åpne AIS-data er samlet inn fra:
 
 * 90 AIS-basestasjoner på fastlandet og Svalbard ‒ viser kontinuerlige data om skipsbevegelser opptil 40-60 nautiske mil fra kysten.
@@ -26,7 +26,7 @@ En rekke tjenester fra BarentsWatch viser fartøy i kart. Informasjonen her komm
 
 Se også Kystinfo for åpne AIS data. Velg "temalag" i høyre meny, deretter "Sjøtrafikk og AIS". AIS data er også tilgjengelig på følgende IP adresse: `153.44.253.27` port `5631`. [^1]
 
-## Begrensningene på åpen AIS-datastrøm:
+### Begrensningene på åpen AIS-datastrøm:
 
 Gjelder for det geografiske område innenfor norsk økonomisk sone, fiskerivernsonen ved Svalbard og vernesonen ved Jan Mayen.
 Viser ikke fiskefartøy under 15 meter.

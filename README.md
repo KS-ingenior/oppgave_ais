@@ -24,6 +24,6 @@ Viser ikke fritidsfartøy under 45 meter.
 
 Flow: ![NIFI Flow](NIFI-Flow-AIS.JPG)
 
-XML: link her
+NiFi template: [Template i XML](AIS-lagre-som-CSV-final.xml)
 
 Nifi tilgjengelig her: http://34.88.85.78:8443/nifi/

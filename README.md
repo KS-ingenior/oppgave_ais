@@ -1,7 +1,7 @@
 # Nedlasting av AIS-data som øvingsdatasett til ING3209
 
 ### Maskinvare
-VM i [Google Cloud](https://cloud.google.com/). 
+Virtuell maskin etablert i [Google Cloud](https://cloud.google.com/). 
 
 | Machine config  |  |
 | ------------- | ------------- |

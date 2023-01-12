@@ -42,4 +42,9 @@ NiFi template: [Template i XML](AIS-lagre-som-CSV-final.xml)
 Nifi tilgjengelig her: http://34.88.85.78:8443/nifi/
 
 
+## Slå sammen til en CSV pr dag
+Kjør [dette](create_daily_csv.py) skriptet for å slå sammen og lage en CSV-fil pr døgn. Skriptet leser igjennom alle CSV-filene i mappen (evt endre folder path), sorterer basert på kolonnen 'timestamp_utc' og lagrer nye CSV-filer etter formatet YYYY-MM-DD.
+
+
+
 [^1]: https://www.barentswatch.no/artikler/tilbyr-apne-ais-data/

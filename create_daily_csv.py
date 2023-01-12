@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 
 # specify the directory containing the CSV files
-dir = 'AIS_pos'
+dir = 'ais-pos'
 #dir = 'AIS_status'
 
 # get a list of all CSV files in the directory

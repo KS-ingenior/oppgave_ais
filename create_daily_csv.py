@@ -2,27 +2,31 @@ import os
 import pandas as pd
 from datetime import datetime
 
-folder_path = "path/to/folder"
+# specify the directory containing the CSV files
+dir = 'AIS_pos'
+#dir = 'AIS_status'
 
-# get all csv files in the folder
-csv_files = [f for f in os.listdir(folder_path) if f.endswith('.csv')]
+# get a list of all CSV files in the directory
+csv_files = [f for f in os.listdir(dir) if f.endswith('.csv')]
 
-# create a dictionary to store dataframes with keys as date
-df_dict = {}
+# create an empty list to store the dataframe
+df_list = []
 
-# iterate through csv files
+# loop through the CSV files and join the values
 for file in csv_files:
-    file_path = os.path.join(folder_path, file)
-    df = pd.read_csv(file_path)
+    temp_df = pd.read_csv(os.path.join(dir, file))
+    df_list.append(temp_df)
 
-    # extract date from timestamp and use it as key
-    date_str = datetime.strptime(df['timestamp'][0], '%Y-%m-%d %H:%M:%S.%f').date()
-    day_str = date_str.strftime('%Y-%m-%d')
-    if day_str in df_dict:
-        df_dict[day_str] = pd.concat([df_dict[day_str], df])
-    else:
-        df_dict[day_str] = df
+# join all dataframe using concat
+df = pd.concat(df_list)
 
-# concatenate dataframes for each date and save as csv
-for day, df in df_dict.items():
-    df.to_csv(f"{day}.csv", index=False)
+# convert timestamp column to datetime format
+df['datetime'] = pd.to_datetime(df['timestamp_utc'], format='%Y-%m-%d %H:%M:%S.%f')
+
+#sort the dataframe by datetime
+df.sort_values(by='datetime', inplace=True)
+
+# group the data by date and write new CSV files
+for date, group in df.groupby(df['datetime'].dt.date):
+    new_file = f'{date}.csv'
+    group.to_csv(os.path.join(dir, new_file), index=False)

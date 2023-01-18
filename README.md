@@ -39,7 +39,7 @@ Flow: ![NIFI Flow](NIFI-Flow-AIS.JPG)
 
 NiFi template: [Template i XML](AIS-lagre-som-CSV-final.xml)
 
-Nifi tilgjengelig her: http://34.88.85.78:8443/nifi/
+Nifi tilgjengelig her: http://ksing.duckdns.org:8443/nifi/
 
 
 ## Slå sammen til en CSV pr dag

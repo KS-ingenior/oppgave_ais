@@ -5,7 +5,7 @@ import time
 
 # Set the NiFi URL, processor ID, and the time to start/stop the processor
 nifi_url = "http://localhost:8443/nifi-api"
-processor_id = "12345678-1234-1234-1234-1234567890ab"
+processor_id = "138102822-a8b8-3917-17fb-84452b74ee4b"
 
 # Function to start the processor
 def start_processor():

@@ -1,0 +1,31 @@
+import requests
+import json
+import datetime
+import time
+
+# Set the NiFi URL, processor ID, and the time to start/stop the processor
+nifi_url = "http://localhost:8443/nifi-api"
+processor_id = "12345678-1234-1234-1234-1234567890ab"
+
+# Function to start the processor
+def start_processor():
+    requests.put(nifi_url + "/processors/" + processor_id,
+                 headers={"Content-Type": "application/json"},
+                 json={"revision": {"version": 0}, "component": {"state": "RUNNING"}})
+    print("Processor started at: " + str(datetime.datetime.now()))
+
+# Function to stop the processor
+def stop_processor():
+    requests.put(nifi_url + "/processors/" + processor_id,
+                 headers={"Content-Type": "application/json"},
+                 json={"revision": {"version": 0}, "component": {"state": "STOPPED"}})
+    print("Processor stopped at: " + str(datetime.datetime.now()))
+
+# Infinite loop to check the current time and start/stop the processor as needed
+while True:
+    current_time = datetime.datetime.now()
+    if current_time.hour == 0 and current_time.minute == 0 and current_time.second % 10 == 0:
+        stop_processor()
+        time.sleep(5)
+        start_processor()
+    time.sleep(1)

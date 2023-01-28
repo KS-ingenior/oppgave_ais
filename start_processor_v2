@@ -1,0 +1,23 @@
+
+import requests
+import time
+
+# Set the base URL for the NiFi instance
+base_url = "http://localhost:8443"
+
+# Set the headers for the REST API call
+headers = {'Content-Type': 'application/json'}
+
+# Set the ID of the processor you want to start
+processor_id = "138102822-a8b8-3917-17fb-84452b74ee4b"
+
+while True:
+    # Start the processor
+    start_url = base_url + "/processors/" + processor_id + "/run-status"
+    start_data = '{"state": "RUNNING"}'
+    start_response = requests.put(start_url, headers=headers, data=start_data)
+    print(start_response.status_code)
+    print("Processor started")
+
+    # Wait for one hour
+    time.sleep(3600)

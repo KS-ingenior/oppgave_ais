@@ -1,10 +1,9 @@
 import requests
 
-processor_id = "your_processor_id"
-url = f"http://localhost:8080/nifi-api/processors/{processor_id}/run-status"
+processor_id = "0185101b-19ab-1e53-a6d7-e825d69331c4"
+url = f"http://localhost:8443/nifi-api/processors/{processor_id}/run-status"
 headers = {
-    "Content-Type": "application/json",
-    "Authorization": "Bearer {access_token}"
+    "Content-Type": "application/json"
 }
 payload = {"state": "STOPPED"}
 

@@ -10,9 +10,12 @@ response = requests.get(url)
 
 if response.status_code == 200:
     processor = response.json()
-    revision = processor['revision']
-    client_id = revision['clientId']
-    print(f"Client ID: {client_id}")
+    try:
+        revision = processor['revision']
+        client_id = revision['clientId']
+        print(f"Client ID: {client_id}")
+    except KeyError:
+        print("Response does not contain a 'clientId' key.")
 else:
     print(f"Request failed with status code: {response.status_code}")
     print(response.text)

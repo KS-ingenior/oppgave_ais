@@ -21,4 +21,3 @@ while True:
     # Wait for one hour
     time.sleep(3600)
 
-print(start_url)

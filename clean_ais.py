@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 
-folder_path = '/Users/luggerud/Desktop/ais-pos/'
+folder_path = '/set/folder/path'
 
 # iterate through all CSV files in the folder
 for file_name in os.listdir(folder_path):

@@ -8,9 +8,9 @@ Kan lastes ned [her](https://drive.google.com/file/d/1C5RwRdRgCSQ0EP-kysDz_dI5Ac
 
 ### Datakvalitet
 Datasettet er ikke kontinuerlig men har tre tidsperioder som er mer eller mindre komplette.
-- 09. jan - 18. jan 23
-- 10.feb -  16. feb 23
-- 22. feb - 08. mar 23
+- 9 jan - 18 jan 23
+- 10 feb -  16 feb 23
+- 22 feb - 08 mar 23
 
 I tillegg er det noen timer opprom innen i de ulike periodene som ikke har data.
 

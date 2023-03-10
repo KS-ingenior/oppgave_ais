@@ -1,7 +1,18 @@
 # Datasett
-Kan lastes ned her https://drive.google.com/file/d/1C5RwRdRgCSQ0EP-kysDz_dI5AcpxKXXP/view?usp=share_link
+Kan lastes ned [her](https://drive.google.com/file/d/1C5RwRdRgCSQ0EP-kysDz_dI5AcpxKXXP/view?usp=share_link)
 
+### Datakvalitet
+Datasettet har tre tidsperioder.
+- En uke i jan, en uke i feb og en uke i mars
+- Noen "hull" i datasettet
 
+### Begrensningene på åpen AIS-datastrøm:
+
+Gjelder for det geografiske område innenfor norsk økonomisk sone, fiskerivernsonen ved Svalbard og vernesonen ved Jan Mayen.
+Viser ikke fiskefartøy under 15 meter.
+Viser ikke fritidsfartøy under 45 meter.
+
+![Bilde av dekningsområdet](https://developer.barentswatch.no/assets/images/OpenAisArea2-c5332d2a6ed8f25fba1b5b064ad72b38.PNG)
 
 
 
@@ -30,13 +41,7 @@ En rekke tjenester fra BarentsWatch viser fartøy i kart. Informasjonen her komm
 
 Se også Kystinfo for åpne AIS data. Velg "temalag" i høyre meny, deretter "Sjøtrafikk og AIS". AIS data er også tilgjengelig på følgende IP adresse: `153.44.253.27` port `5631`. [^1]
 
-### Begrensningene på åpen AIS-datastrøm:
 
-Gjelder for det geografiske område innenfor norsk økonomisk sone, fiskerivernsonen ved Svalbard og vernesonen ved Jan Mayen.
-Viser ikke fiskefartøy under 15 meter.
-Viser ikke fritidsfartøy under 45 meter.
-
-![Bilde av dekningsområdet](https://developer.barentswatch.no/assets/images/OpenAisArea2-c5332d2a6ed8f25fba1b5b064ad72b38.PNG)
 
 
 Flow: ![NIFI Flow](NIFI-Flow-AIS.JPG)

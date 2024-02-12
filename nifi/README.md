@@ -1,8 +1,8 @@
 # Nedlasting av AIS-data
 
-Flow: ![NIFI Flow](nifi/NIFI-Flow-AIS.JPG)
+Flow: ![NIFI Flow](NIFI-Flow-AIS.JPG)
 
-NiFi template: [Template i XML](nifi/AIS-lagre-som-CSV-final.xml)
+NiFi template: [Template i XML](AIS-lagre-som-CSV-final.xml)
 
 Nifi tilgjengelig her: http://ksing.duckdns.org:8443/nifi/
 

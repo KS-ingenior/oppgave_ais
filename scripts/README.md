@@ -2,8 +2,14 @@
 
 I denne mappen ligger følgende:
 
-## clean_ais
-AIS-data har endel støy/feil i seg og må "renses" før de importeres inn i en SQL-database
+## clean_ais.py
+This script is designed to clean CSV files containing AIS (Automatic Identification System) data located in a specified folder. The script performs several cleaning operations, including:
+
+1. Iterating through all CSV files in the specified folder.
+2. Removing rows with invalid latitude or longitude values.
+3. Converting the "speed" column to numeric type, treating non-numeric values as NaN (Not a Number), and setting these NaN values explicitly 
+4. Removing rows with invalid speed values (speeds outside the 0 to 80 range) and invalid course values (courses not between 0 and 359 degrees).
+5. Saving the cleaned data to a new CSV file, appending _CLEAN to the original filename to distinguish the cleaned dataset.
 
 ## import_AIS_postgres.py
 This script will handle CSV files from two different directories—one for static ships and another for dynamic ships—and import them into their respective tables in the database.
@@ -26,4 +32,5 @@ If your tables are in the PostgreSQL default public schema, you could omit the s
 
 If you're unsure about the schema where your tables reside, you can check your database schema setup or consult with your database administrator. In most cases, if you have created custom schemas for organizing your database objects, you should provide the schema name in your script as shown. This approach helps in maintaining clarity and ensures that the data is inserted into the correct place, especially in more complex databases with multiple schemas.
 
-## import
+## import_dynamic and import_status.sh
+Bash script that iterates through CSV files in a specific directory and uses the psql command line tool to import data from each file into a PostgreSQL database table (ais_data.dynamic_ships or ais_statis_ships). This script is a straightforward way to bulk import CSV data into a PostgreSQL table directly from the command line.

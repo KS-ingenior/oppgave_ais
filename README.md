@@ -6,7 +6,11 @@ Kan lastes ned [her](https://drive.google.com/file/d/1C5RwRdRgCSQ0EP-kysDz_dI5Ac
 
 ![Bilde av dekningsområdet](https://developer.barentswatch.no/assets/images/OpenAisArea2-c5332d2a6ed8f25fba1b5b064ad72b38.PNG)
 
-### Datakvalitet
+## Lure triks 
+I mappen [scripts](scripts) ligger det noen nyttige scripts som kan hjelpe dere med å importere data og rense dataene deres.
+
+
+## Datakvalitet
 **MÅ OPPDATERES**
 
 Datasettet er ikke kontinuerlig, men har tre tidsperioder som er mer eller mindre komplette.

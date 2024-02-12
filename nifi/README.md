@@ -24,4 +24,4 @@ Virtuell maskin etablert i [Google Cloud](https://cloud.google.com/).
 
 
 ## Slå sammen til en CSV pr dag
-Kjør [dette](create_daily_csv.py) skriptet for å slå sammen og lage en CSV-fil pr døgn. Skriptet leser igjennom alle CSV-filene i mappen (evt endre folder path), sorterer basert på kolonnen 'timestamp_utc' og lagrer nye CSV-filer etter formatet YYYY-MM-DD.
+Kjør [dette](create_daily_csv.py) skriptet for å slå sammen og lage en CSV-fil pr døgn. Skriptet leser igjennom alle CSV-filene i mappen (evt endre folder path), sorterer basert på kolonnen 'timestamp_utc' og lagrer nye CSV-filer etter formatet YYYY-MM-DD. Dette gjøres for å etterligne hva du får lastet ned fra andre tjenester som den danske og den amerikanske.

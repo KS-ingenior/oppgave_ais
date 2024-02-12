@@ -17,6 +17,7 @@ Virtuell maskin etablert i [Google Cloud](https://cloud.google.com/).
 | ------------- | ------------- |
 | Machine type | e2-medium |
 | CPU platform | Intel Broadwell  |
+| HD | 100 GB  |
 | Architecture | x86/64 |
 | OS | Ubuntu 20.04 |
 | Nifi version | 16.3 |

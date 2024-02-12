@@ -1,6 +1,6 @@
 # Nedlasting av AIS-data
 
-''Det ble etablert en maskin i Google Cloud for å laste ned data fra Kystverkets åpne endpoint. Maskinen gikk i ca 4 måneder. Kostnad ca 700 kr i måneden.''
+Det ble etablert en maskin i Google Cloud for å laste ned data fra Kystverkets åpne endpoint. Maskinen gikk i ca 4 måneder. Kostnad ca 700 kr i måneden.
 
 
 Flow: ![NIFI Flow](NIFI-Flow-AIS.JPG)

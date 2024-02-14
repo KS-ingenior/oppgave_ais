@@ -41,7 +41,7 @@ If needed, it is possible to [download](https://web.ais.dk/aisdata/) additional 
 In ARCGIS queries are used to search for and select a subset of features and table records. All query expressions in ArcGIS Pro use Structured Query Language (SQL) to formulate these search specifications. The query builder is used to construct the queries in numerous places. (https://pro.arcgis.com/en/pro-app/3.1/help/mapping/navigation/write-a-query-in-the-query-builder.htm)
 Link til nyttig ressurs: (https://pro.arcgis.com/en/pro-app/3.1/help/mapping/navigation/sql-reference-for-elements-used-in-query-expressions.htm)
 ## Tutorials
-1. A basic introduction to SQL is provided here. https://www.postgresql.org/docs/15/tutorial.html![image](https://github.com/KS-ingenior/oppgave_ais_data/assets/156073833/64263a94-c829-4667-b668-1513f110082a)
+1. A basic introduction to SQL is provided here: (https://www.postgresql.org/docs/15/tutorial.html)
 2. A more specific and specialized tutorial utilizing the POSTGIS functionality in a maritime environment is provided here: (https://hal.science/hal-03137050v1)
 
 ## Useful scripts

@@ -42,7 +42,7 @@ In ARCGIS queries are used to search for and select a subset of features and tab
 Link til nyttig ressurs: (https://pro.arcgis.com/en/pro-app/3.1/help/mapping/navigation/sql-reference-for-elements-used-in-query-expressions.htm)
 ## Tutorials
 1. A basic introduction to SQL is provided here. https://www.postgresql.org/docs/15/tutorial.html![image](https://github.com/KS-ingenior/oppgave_ais_data/assets/156073833/64263a94-c829-4667-b668-1513f110082a)
-2. A more specific and specialized tutorial utilizing the POSTGIS functionality in a maritime environment is provided here: [[https://hal.science/hal-03137050/file/Maritime_Informatics_2021.pdf![image](https://github.com/KS-ingenior/oppgave_ais_data/assets/156073833/b06f585a-81b6-4f1b-a17b-95553c289f2e)](https://hal.science/hal-03137050v1)](https://hal.science/hal-03137050v1)
+2. A more specific and specialized tutorial utilizing the POSTGIS functionality in a maritime environment is provided here: (https://hal.science/hal-03137050v1)
 
 ## Useful scripts
 In the folder [scripts](scripts) there are several useful scripts that will help you with preparing and cleaning your data prior to importing them in to your database.

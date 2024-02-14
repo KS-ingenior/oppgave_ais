@@ -1,8 +1,9 @@
 # Bakgrunn
-Dette repoet inneholder info om oppgaven og datasettet som bruker i stordata-uka på milgeofordypningen på KSING. Det inneholder både link til datasettet, informasjon om datasettet, samt noen verktøy som kan hjelpe deg med å bearbeide dataene før de imporeteres inn i PostgresSQL-databasen.
+Dette repoet inneholder info om oppgaven og datasettet som bruker i stordata-uka på milgeofordypningen på KSING. Det inneholder både link til datasettet, informasjon om datasettet, samt noen verktøy som kan hjelpe deg med å bearbeide dataene før de imporeteres inn i PostgreSQL-databasen.
 
 ## Hensikt
-Oppgaven skal hjelpe dere med..., samt bli kjent med QGIS
+Oppgaven skal hjelpe dere med..., samt bli kjent med QGIS.
+Bli kjent med enterprise databaser
 
 # Programvare
 Last ned og installer følgende:
@@ -14,38 +15,37 @@ Last ned og installer følgende:
 
 
 # Datasett
-Kan lastes ned [her](https://drive.google.com/file/d/1C5RwRdRgCSQ0EP-kysDz_dI5AcpxKXXP/view?usp=share_link). Datasettet er lastet ned fra Kystverkets åpne datastrøm. Denne datastrømmen har noen begrensninger:
+Kan lastes ned [her](https://drive.google.com/file/d/1C5RwRdRgCSQ0EP-kysDz_dI5AcpxKXXP/view?usp=share_link). Datasettet er lastet ned fra Kystverkets åpne datastrøm. 
+## Begrensninger
+Denne datastrømmen har noen begrensninger:
 - Gjelder for det geografiske område innenfor norsk økonomisk sone, fiskerivernsonen ved Svalbard og vernesonen ved Jan Mayen.
 - Viser ikke fiskefartøy under 15 meter.
 - Viser ikke fritidsfartøy under 45 meter.
 
+## Tidsrom
+* 22 February 2023 - 29 March
+
 ## Kilder
 * Kystverket
 
-
-## Datakvalitet
-**MÅ OPPDATERES**
-
-Datasettet er ikke kontinuerlig, men har tre tidsperioder som er mer eller mindre komplette.
-- 9 jan - 18 jan 23
-- 10 feb -  16 feb 23
-- 22 feb - 08 mar 23
-
-I tillegg er det noen timer opprom innen i de ulike periodene som ikke har data.
-
-Totalt 32 døgn med data
+## Coverage of Norwegian AIS data
 ![Bilde av dekningsområdet](https://developer.barentswatch.no/assets/images/OpenAisArea2-c5332d2a6ed8f25fba1b5b064ad72b38.PNG)
 
-# Lure triks 
-I mappen [scripts](scripts) ligger det noen nyttige scripts som kan hjelpe dere med å importere og "rense" dataene deres.
+## Additional data
+If needed, it is possible to [download](https://web.ais.dk/aisdata/) additional data from [Danish Maritime Authority](https://dma.dk/safety-at-sea/navigational-information/ais-data). Aprrox coverage for these data is as shown below: ![image](https://github.com/KS-ingenior/oppgave_ais_data/assets/156073833/672de51c-32ff-4663-b96d-6e234b762017)
+
+
+
 
 # SQL
 In ARCGIS queries are used to search for and select a subset of features and table records. All query expressions in ArcGIS Pro use Structured Query Language (SQL) to formulate these search specifications. The query builder is used to construct the queries in numerous places. (https://pro.arcgis.com/en/pro-app/3.1/help/mapping/navigation/write-a-query-in-the-query-builder.htm)
 Link til nyttig ressurs: (https://pro.arcgis.com/en/pro-app/3.1/help/mapping/navigation/sql-reference-for-elements-used-in-query-expressions.htm)
-## Tutorial
-Dere er kjent med SQL fra For å gjøre spørringer 
-For å få en en grunnleggende innføring i SQLhttps://www.postgresql.org/docs/15/tutorial.html![image](https://github.com/KS-ingenior/oppgave_ais_data/assets/156073833/64263a94-c829-4667-b668-1513f110082a)
+## Tutorials
+1. A basic introduction to SQL is provided here. https://www.postgresql.org/docs/15/tutorial.html![image](https://github.com/KS-ingenior/oppgave_ais_data/assets/156073833/64263a94-c829-4667-b668-1513f110082a)
+2. A more specific and specialized tutorial utilizing the POSTGIS functionality is provided here: https://hal.science/hal-03137050/file/Maritime_Informatics_2021.pdf![image](https://github.com/KS-ingenior/oppgave_ais_data/assets/156073833/b06f585a-81b6-4f1b-a17b-95553c289f2e)
 
+## Useful scripts
+In the folder [scripts](scripts) there are several useful scripts that will help you with preparing and cleaning your data prior to importing them in to your database.
 
 ## PostGRESQL
 PostgreSQL, often referred to simply as Postgres, is a powerful, open-source object-relational database management system (ORDBMS). It has earned a strong reputation for its proven architecture, reliability, data integrity, robust feature set, and extensibility. Here's a quick introduction to some of its key features and aspects:

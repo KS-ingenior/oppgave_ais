@@ -1,12 +1,17 @@
 # Bakgrunn
 Dette repoet inneholder info om oppgaven og datasettet som bruker i stordata-uka på milgeofordypningen på KSING. Det inneholder både link til datasettet, informasjon om datasettet, samt noen verktøy som kan hjelpe deg med å bearbeide dataene før de imporeteres inn i PostgresSQL-databasen.
 
-# Hensikt
+## Hensikt
 Oppgaven skal hjelpe dere med..., samt bli kjent med QGIS
 
 # Programvare
+Last ned og installer følgende:
 * [PostgreSQL med PostGIS extension](https://www.postgresql.org/download/)
 * [QGIS](https://qgis.org/en/site/forusers/download.html)
+* [Python](https://www.python.org/)
+* 
+
+
 
 # Datasett
 Kan lastes ned [her](https://drive.google.com/file/d/1C5RwRdRgCSQ0EP-kysDz_dI5AcpxKXXP/view?usp=share_link). Datasettet er lastet ned fra Kystverkets åpne datastrøm. Denne datastrømmen har noen begrensninger:
@@ -32,9 +37,15 @@ Totalt 32 døgn med data
 ![Bilde av dekningsområdet](https://developer.barentswatch.no/assets/images/OpenAisArea2-c5332d2a6ed8f25fba1b5b064ad72b38.PNG)
 
 # Lure triks 
-I mappen [scripts](scripts) ligger det noen nyttige scripts som kan hjelpe dere med å importere data og rense dataene deres.
+I mappen [scripts](scripts) ligger det noen nyttige scripts som kan hjelpe dere med å importere og "rense" dataene deres.
 
 # SQL
+In ARCGIS queries are used to search for and select a subset of features and table records. All query expressions in ArcGIS Pro use Structured Query Language (SQL) to formulate these search specifications. The query builder is used to construct the queries in numerous places. (https://pro.arcgis.com/en/pro-app/3.1/help/mapping/navigation/write-a-query-in-the-query-builder.htm)
+Link til nyttig ressurs: (https://pro.arcgis.com/en/pro-app/3.1/help/mapping/navigation/sql-reference-for-elements-used-in-query-expressions.htm)
+## Tutorial
+Dere er kjent med SQL fra For å gjøre spørringer 
+For å få en en grunnleggende innføring i SQLhttps://www.postgresql.org/docs/15/tutorial.html![image](https://github.com/KS-ingenior/oppgave_ais_data/assets/156073833/64263a94-c829-4667-b668-1513f110082a)
+
 
 ## PostGRESQL
 PostgreSQL, often referred to simply as Postgres, is a powerful, open-source object-relational database management system (ORDBMS). It has earned a strong reputation for its proven architecture, reliability, data integrity, robust feature set, and extensibility. Here's a quick introduction to some of its key features and aspects:
@@ -61,17 +72,13 @@ PostgreSQL, often referred to simply as Postgres, is a powerful, open-source obj
 
    Kilde: CHATGPT
 
-### Use Cases
-
-PostgreSQL is used for a wide range of applications, from simple websites to complex web services, financial systems, geographic information systems (GIS), and much more. Its versatility, reliability, and open-source nature make it a favored choice among developers, businesses, and government organizations.
-
 
 ## POSTGIS
 PostGIS (/ˈpoʊstdʒɪs/ POST-jis) is an open source software program that adds support for geographic objects to the PostgreSQL object-relational database. PostGIS follows the Simple Features for SQL specification from the Open Geospatial Consortium (OGC). (https://en.wikipedia.org/wiki/PostGIS) 
 
 PostGIS is an open-source extension for the PostgreSQL database that adds support for geographic objects, allowing it to be used as a spatial database for geographic information systems (GIS), much like an extension of the SQL standard for spatial data. This extension enables PostgreSQL to store, query, and manipulate spatial data, facilitating the analysis of geographic information and the management of location-based data.
 
-Key Features of PostGIS
+**Key Features of PostGIS**
 1. Spatial Data Types: PostGIS introduces spatial data types such as GEOMETRY and GEOGRAPHY, which can represent points, lines, polygons, and other geometric shapes in two and three dimensions.
 
 2. Spatial Functions: It provides a wide range of functions for performing operations on spatial data, including spatial relationships and measurements (e.g., distance, area, intersection, and containment), geometry processing (e.g., simplification, validation, and transformation), and spatial indexing for efficient querying.

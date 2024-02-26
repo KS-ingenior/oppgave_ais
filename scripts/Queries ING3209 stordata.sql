@@ -1,3 +1,5 @@
+https://docs.mobilitydb.com/MobilityDB-workshop/master/ch01.html
+
 https://meridian.cs.dal.ca/wp-content/uploads/2020/11/AIS.pdf
 
 https://anitagraser.com/tag/postgis/ 

@@ -6,6 +6,10 @@ https://anitagraser.com/tag/postgis/
 
 https://github.com/anitagraser/postgis-spatiotemporal/blob/master/plpgsql_detectstops.sql
 
+CREATE DATABASE "ais_data" ;
+	
+CREATE SCHEMA "ais_data" ;
+	
 -- Create table for static data (message 5)
 
 CREATE TABLE ais_data.static_ships(

@@ -6,7 +6,7 @@ import glob
 
 # Database connection parameters
 db_config = {
-    'dbname': 'ING3209',
+    'dbname': 'ING3209', # Replace with your actual PostgreSQL database
     'user': 'postgres',
     'password': '1750',  # Replace 'your_password' with your actual PostgreSQL password
     'host': 'localhost',
@@ -17,7 +17,7 @@ db_config = {
 engine_url = f"postgresql+psycopg2://{db_config['user']}:{db_config['password']}@{db_config['host']}:{db_config['port']}/{db_config['dbname']}"
 engine = create_engine(engine_url)
 
-# Paths to the CSV files for static and dynamic ships
+# Paths to the CSV files for static and dynamic ships (change to your actual file path)
 #static_ships_path = r'C:\Users\MilGeo2\Documents\Stordata (AIS) 2024\AIS-data pr dag\ais-status/*.csv'
 dynamic_ships_path = r'C:\Users\MilGeo2\Documents\Stordata (AIS) 2024\AIS-data pr dag\ais-pos/*.csv'  # Provide the correct path here
 

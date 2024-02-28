@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-from datetime import datetime
 
 # specify the directory containing the CSV files
 dir = '../ais-new/ais-pos'
@@ -20,13 +19,13 @@ for file in csv_files:
 # join all dataframe using concat
 df = pd.concat(df_list)
 
-# convert timestamp column to datetime format
-df['datetime'] = pd.to_datetime(df['timestamp_utc'], format='%Y-%m-%d %H:%M:%S.%f')
-
-#sort the dataframe by datetime
-df.sort_values(by='datetime', inplace=True)
+# Define the directory for storing all daily CSV files
+daily_csv_dir = os.path.join(dir, "daily_csv_files")
+if not os.path.exists(daily_csv_dir):
+    os.makedirs(daily_csv_dir)
 
 # group the data by date and write new CSV files
-for date, group in df.groupby(df['datetime'].dt.date):
-    new_file = f'{date}.csv'
-    group.to_csv(os.path.join(dir, new_file), index=False)
+for date, group in df.groupby(df['timestamp_utc'].str[:10]):
+    # Define the file path for the new CSV file within the daily CSV directory
+    new_file_path = os.path.join(daily_csv_dir, f'{date}.csv')
+    group.to_csv(new_file_path, index=False)

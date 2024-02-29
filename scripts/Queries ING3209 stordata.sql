@@ -39,6 +39,15 @@ COPY ais_data.static_ships(
   FROM '/Users/luggerud/Desktop/Stordata_AIS/Datasett/Endelig datasett/ais-status/2023-01-12_status.csv'
 delimiter ',' csv HEADER;
 
+
+--create country codes table
+CREATE TABLE context_data.cnty_codes (
+    digit INTEGER PRIMARY KEY,
+    country VARCHAR(255)
+);
+
+--kopier inn data fra AIS-country-codes.csv vh import/export data
+
 --add country code in static ships
 ALTER TABLE ais_data.static_ships ADD COLUMN cnty text;
 ALTER TABLE ais_data.static_ships ADD COLUMN cnty_code integer;
@@ -46,8 +55,8 @@ ALTER TABLE ais_data.static_ships ADD COLUMN cnty_code integer;
 UPDATE ais_data.static_ships
 SET cnty = cnty_codes.country,
     cnty_code = cnty_codes.digit
-FROM ais_data.cnty_codes
-WHERE SUBSTRING(static_ships.sourcemmsi::text FROM 1 FOR 3)::integer = cnty_codes.digit;
+FROM context_data.cnty_codes
+WHERE SUBSTRING(static_ships.mmsi::text FROM 1 FOR 3)::integer = cnty_codes.digit;
 
 
 --create view ships 
@@ -61,7 +70,7 @@ CREATE OR REPLACE VIEW ais_data.ships AS SELECT
   cnty,
   cnty_code
 FROM ais_data.static_ships
-GROUP BY sourcemmsi,imo,callsign,shipname,shiptype, shiptype_text,cnty, cnty_code ;
+GROUP BY mmsi,imo,callsign,shipname,shiptype, shiptype_text,cnty, cnty_code ;
 
 -- SQL query that shows how many MMSI numbers are used more than once from the table ais_data.ships and include both mmsi and shipname in the result
 SELECT s1.MMSI, s1.shipname
@@ -104,26 +113,32 @@ WITH (
   OIDS=FALSE
 );
 
-
 -- Copy from CSV-files into database
-copy ais_data.dynamic_ships (course, datetime, heading, lat, lon, mmsi, speed, status_text, turn, type) FROM '/Users/luggerud/Desktop/ais-pos/2023-02-09.csv' DELIMITER ',' CSV HEADER QUOTE '\"' NULL ' ' ESCAPE '''';""
+Use the import_AIS_postgres.py
+# copy ais_data.dynamic_ships (course, datetime, heading, lat, lon, mmsi, speed, status_text, turn, type) FROM '/Users/luggerud/Desktop/ais-pos/2023-02-09.csv' DELIMITER ',' CSV HEADER QUOTE '\"' NULL ' ' ESCAPE '''';""
 
 -- make data temporal
 ALTER TABLE ais_data.dynamic_ships ADD COLUMN t timestamp without time zone;
 UPDATE ais_data.dynamic_ships SET t = to_timestamp(datetime,'YYYY-MM-DD HH24:MI:SS.MS');
 
---find max and min t from dynamic_ships
-SELECT min(t) , max(t) FROM ais_data.dynamic_ships ;
-
 -- create index on the time column
 CREATE INDEX idx_dynamic_ships_time
 ON ais_data.dynamic_ships 
-USING btree (t) ; 
+USING btree (t) ;
 
---create POSTGIS extension 
-CREATE EXTENSION postgis;
+-- query returned successfully in 30 min 43 secs.
 
---make data geograpic
+--create index on mmsi column
+CREATE INDEX idx_dynamic_ships_mmsi
+ON ais_data.dynamic_ships
+USING btree (mmsi) ;
+Query returned successfully in 2 min 10 secs
+
+--find max and min t from dynamic_ships
+SELECT min(t) , max(t) FROM ais_data.dynamic_ships ;
+
+
+--make data geograpic (consider transforming the coordinates in to 3035 to save time)
 ALTER TABLE ais_data.dynamic_ships ADD COLUMN geom geometry(Point,4326);
 UPDATE ais_data.dynamic_ships
 SET geom=ST_SetSRID (ST_MakePoint(lon,lat),4326) ;
@@ -132,22 +147,57 @@ SET geom=ST_SetSRID (ST_MakePoint(lon,lat),4326) ;
 CREATE INDEX idx_dynamic_ships_geom
 ON ais_data.dynamic_ships
 USING GiST (geom);
+Query complete 01:19:35.764
 
+--legge til felt for ETRS-89 geometri i dynamic ships
+ALTER TABLE ais_data.dynamic_ships ADD COLUMN geom3035 geometry(Point ,3035);
 
----Index dynamic ships
-CREATE INDEX idx_dynamic_ships_geom4230
+--Copy data from geom and transform them into 3035
+UPDATE ais_data.dynamic_ships
+SET geom3035 = ST_Transform(geom, 3035)
+WHERE geom IS NOT NULL;
+	
+---Index geom3035
+CREATE INDEX idx_dynamic_ships_geom3035
 ON ais_data.dynamic_ships
-USING GiST (geom4230);
+USING GiST (geom3035);
 
---legge til cnty_code i dynamic ships
+Query returned successfully in 3 hr 35 min
+
+--create a table holding the military vessels
+CREATE TABLE AS ais_data.military_vessels
+SELECT d.*, s.shiptype
+FROM ais_data.dynamic_ships d
+INNER JOIN ais_data.static_ships s ON d.MMSI = s.MMSI
+WHERE s.shiptype = '35';
+
+-- create a table holding the suspicious vessels
+CREATE TABLE ais_data.susp_vessels AS
+SELECT *
+FROM ais_data.dynamic_ships
+WHERE MMSI IN (
+    273355170, 273355040, 273338310, 273118000, 273112800,
+    273131200, 217114000, 273116000, 273333440, 273138300,
+    273317430, 273115700, 273114000, 273315200, 273331830,
+    273325210, 273113600, 273333020, 273453700, 273133800,
+    273243700, 273340570, 273330620, 273454600, 273452600,
+    273113800, 273386130, 273363000, 273383350, 273114600,
+    273349820, 273148810, 273399790, 273350540, 273380520,
+    273357360, 273131200, 273113600, 273399790, 273350540,
+    273380520, 273357360
+);
+
+	
+--add cnty_code in dynamic ships
 ALTER TABLE ais_data.dynamic_ships ADD COLUMN cnty_code integer;
 UPDATE ais_data.dynamic_ships
 SET cnty_code = cnty_codes.digit
 FROM ais_data.cnty_codes
 WHERE SUBSTRING(dynamic_ships.mmsi::text FROM 1 FOR 3)::integer = cnty_codes.digit;
 
+
 --Create table with russian ships (virker ikke returnerer kun samme verdi uendelig mange ganger...)
-CREATE OR REPLACE VIEW ais_data.russianships AS SELECT *
+CREATE OR REPLACE TABLE ais_data.russianships AS SELECT *
 FROM ais_data.dynamic_ships
 WHERE cnty_code = '273'
 

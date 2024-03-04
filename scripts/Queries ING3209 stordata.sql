@@ -6,7 +6,7 @@ https://anitagraser.com/tag/postgis/
 
 https://github.com/anitagraser/postgis-spatiotemporal/blob/master/plpgsql_detectstops.sql
 
-CREATE DATABASE "ais_data" ;
+CREATE DATABASE "ING3209" ;
 	
 CREATE SCHEMA "ais_data" ;
 

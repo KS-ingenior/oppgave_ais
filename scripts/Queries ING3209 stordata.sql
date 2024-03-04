@@ -164,7 +164,7 @@ USING GiST (geom3035);
 
 Query returned successfully in 3 hr 35 min
 
---create a table holding the military vessels
+--create a table holding the military vessels (gir ikke resultat
 CREATE TABLE AS ais_data.military_vessels
 SELECT d.*, s.shiptype
 FROM ais_data.dynamic_ships d
@@ -187,7 +187,36 @@ WHERE MMSI IN (
     273380520, 273357360
 );
 
-	
+
+--Select all the military vessels 
+SELECT DISTINCT MMSI
+FROM ais_data.static_ships
+WHERE shiptype = 35
+limit 1000
+;
+
+--Create table mil vessels
+CREATE VIEW ais_data.filtered_dynamic_ships_view AS
+SELECT *
+FROM ais_data.dynamic_ships
+WHERE MMSI IN (
+    205207000, 211210180, 211210190, 211210280, 211211160, 211211760, 211901000, 
+    211909000, 211920000, 211927000, 211931000, 219000092, 219000161, 219000177, 
+    219000181, 219000185, 219000192, 219000416, 219000469, 219000553, 219002066, 
+    219007679, 219103000, 219104000, 219105000, 219158000, 219263000, 219517000, 
+    219522000, 219524000, 219525000, 220429000, 220431000, 220436000, 224457000, 
+    225988520, 227999100, 232002833, 232691000, 234627000, 235053411, 235069661, 
+    235070237, 235070238, 235109338, 244159000, 244173000, 244251000, 244465000, 
+    245047000, 245330000, 245344000, 245365000, 245965000, 257001000, 257019000, 
+    257036200, 257069500, 257086200, 257092200, 257111010, 257148200, 257149200, 
+    257156200, 257157200, 257158200, 257159200, 257218500, 257446000, 257985000, 
+    258072000, 258242500, 258314500, 258592000, 259010000, 259014000, 259015000, 
+    259019000, 259026000, 259031000, 259041000, 259042000, 259043000, 259045000, 
+    259049000, 259119000, 261283000, 263020000, 276700000, 338806000, 338846000, 
+    419100133
+);
+
+
 --add cnty_code in dynamic ships
 ALTER TABLE ais_data.dynamic_ships ADD COLUMN cnty_code integer;
 UPDATE ais_data.dynamic_ships
@@ -196,13 +225,17 @@ FROM ais_data.cnty_codes
 WHERE SUBSTRING(dynamic_ships.mmsi::text FROM 1 FOR 3)::integer = cnty_codes.digit;
 
 
---Create table with russian ships (virker ikke returnerer kun samme verdi uendelig mange ganger...)
-CREATE OR REPLACE TABLE ais_data.russianships AS SELECT *
-FROM ais_data.dynamic_ships
-WHERE cnty_code = '273'
+--Create table with russian ships which includes
+DROP TABLE IF EXISTS ais_data.russianships;
+
+CREATE TABLE ais_data.russianships AS
+SELECT d.*, s.shiptype, s.shiptype_text
+FROM ais_data.dynamic_ships d
+JOIN ais_data.static_ships s ON d.MMSI = s.MMSI
+WHERE SUBSTRING(d.mmsi::text, 1, 3) = '273';
 
 
-
+--
 
 -- SHP2PGSQL - convert from shapefiles to PGSQL-format
 /Library/PostgreSQL/15/bin/shp2pgsql -s 4230 -I /Users/luggerud/Downloads/pipLine/pipLine.shp context_data.pipeline > /Users/luggerud/Downloads/pipLine/outputfile.sql

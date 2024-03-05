@@ -32,12 +32,8 @@ WITH (
   OIDS=FALSE
 );
 
--- copy 
-COPY ais_data.static_ships(
-  callsign,datetime,destination,eta,imo,mmsi,shipname,shiptype,shiptype_text,type
-  )
-  FROM '/Users/luggerud/Desktop/Stordata_AIS/Datasett/Endelig datasett/ais-status/2023-01-12_status.csv'
-delimiter ',' csv HEADER;
+-- Copy from CSV-files into database
+Use the import_AIS_postgres.py
 
 
 --create country codes table
@@ -46,7 +42,6 @@ CREATE TABLE context_data.cnty_codes (
     country VARCHAR(255)
 );
 
---kopier inn data fra AIS-country-codes.csv vh import/export data
 
 --add country code in static ships
 ALTER TABLE ais_data.static_ships ADD COLUMN cnty text;
@@ -94,6 +89,34 @@ FROM ais_data.ships
 WHERE shipname IS NULL OR TRIM(shipname) = ''
 GROUP BY shipname, mmsi;
 
+--Create vessel info function
+CREATE OR REPLACE FUNCTION get_vessel_info_v3 (
+  input_mmsi integer
+)
+RETURNS text AS $$
+DECLARE
+  vessel_imo integer;
+  vessel_name text;
+  vessel_shiptype integer;
+  vessel_shiptype_text text;
+  country text;
+BEGIN
+  SELECT shipname, imo, shiptype, shiptype_text, cnty INTO vessel_name, vessel_imo, vessel_shiptype, vessel_shiptype_text, country
+  FROM ais_data.static_ships
+  WHERE mmsi = input_mmsi
+  LIMIT 1;
+  
+  IF vessel_name IS NOT NULL AND vessel_imo IS NOT NULL THEN
+    RETURN '[' || vessel_imo || '] ' || vessel_name || ', Type: ' || vessel_shiptype || ' (' || vessel_shiptype_text || '), Country: ' || country || ';';
+  ELSE
+    RETURN 'Vessel information not found.';
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
 -- Create table that contains the moving data
 CREATE TABLE ais_data.dynamic_ships(
   course double precision,
@@ -137,7 +160,6 @@ Query returned successfully in 2 min 10 secs
 --find max and min t from dynamic_ships
 SELECT min(t) , max(t) FROM ais_data.dynamic_ships ;
 
-
 --make data geograpic (consider transforming the coordinates in to 3035 to save time)
 ALTER TABLE ais_data.dynamic_ships ADD COLUMN geom geometry(Point,4326);
 UPDATE ais_data.dynamic_ships
@@ -164,8 +186,7 @@ USING GiST (geom3035);
 
 Query returned successfully in 3 hr 35 min
 
-
--- create a table holding the suspicious vessels
+-- create a table holding the suspicious vessels (copy data from suspicious_vessels.csv)
 CREATE TABLE ais_data.susp_vessels AS
 SELECT *
 FROM ais_data.dynamic_ships
@@ -189,7 +210,7 @@ WHERE shiptype = 35
 limit 1000
 ;
 
---Create table mil vessels
+--Create table mil vessels based on the result from the query above
 CREATE VIEW ais_data.military_vessels AS
 SELECT *
 FROM ais_data.dynamic_ships
@@ -210,6 +231,7 @@ WHERE MMSI IN (
     419100133
 );
 
+-- Create table containg only Russian ships
 CREATE TABLE ais_data.russianships AS
 SELECT *
 FROM ais_data.dynamic_ships
@@ -225,23 +247,6 @@ SUBSTRING(mmsi::text, 1, 3) = '414'
 ;
 
 
-
---add cnty_code in dynamic ships (for tidkrevende, ble aldri gjort)
-ALTER TABLE ais_data.dynamic_ships ADD COLUMN cnty_code integer;
-UPDATE ais_data.dynamic_ships
-SET cnty_code = cnty_codes.digit
-FROM ais_data.cnty_codes
-WHERE SUBSTRING(dynamic_ships.mmsi::text FROM 1 FOR 3)::integer = cnty_codes.digit;
-
-
---Create table with russian ships which includes (for tidkrevende og maskinen går tom for plass før query er ferdig..)
-DROP TABLE IF EXISTS ais_data.russianships;
-
-CREATE TABLE ais_data.russianships AS
-SELECT d.*, s.shiptype, 
-FROM ais_data.dynamic_ships d
-JOIN ais_data.static_ships s ON d.MMSI = s.MMSI
-WHERE SUBSTRING(d.mmsi, 1, 3) = '273';
 
 
 -- Select susp_vessels within 500 m of oil and gas facilities
@@ -316,7 +321,25 @@ ON (
 
 
 
+----SØPPELBØTTE-----
+# her legges queries som ikke blir brukt eller ikke fungerer, men som jeg ikke ønsker å slette
 
+--add cnty_code in dynamic ships (for tidkrevende, ble aldri gjort)
+ALTER TABLE ais_data.dynamic_ships ADD COLUMN cnty_code integer;
+UPDATE ais_data.dynamic_ships
+SET cnty_code = cnty_codes.digit
+FROM ais_data.cnty_codes
+WHERE SUBSTRING(dynamic_ships.mmsi::text FROM 1 FOR 3)::integer = cnty_codes.digit;
+
+
+--Create table with russian ships which includes (for tidkrevende og maskinen går tom for plass før query er ferdig..)
+DROP TABLE IF EXISTS ais_data.russianships;
+
+CREATE TABLE ais_data.russianships AS
+SELECT d.*, s.shiptype, 
+FROM ais_data.dynamic_ships d
+JOIN ais_data.static_ships s ON d.MMSI = s.MMSI
+WHERE SUBSTRING(d.mmsi, 1, 3) = '273';
 
 
 
@@ -360,30 +383,6 @@ ON context_data.pipeline
 USING GiST (geom);
 
 
---Create vessel info function
-CREATE OR REPLACE FUNCTION get_vessel_info_v3 (
-  input_mmsi integer
-)
-RETURNS text AS $$
-DECLARE
-  vessel_imo integer;
-  vessel_name text;
-  vessel_shiptype integer;
-  vessel_shiptype_text text;
-  country text;
-BEGIN
-  SELECT shipname, imo, shiptype, shiptype_text, cnty INTO vessel_name, vessel_imo, vessel_shiptype, vessel_shiptype_text, country
-  FROM ais_data.static_ships
-  WHERE mmsi = input_mmsi
-  LIMIT 1;
-  
-  IF vessel_name IS NOT NULL AND vessel_imo IS NOT NULL THEN
-    RETURN '[' || vessel_imo || '] ' || vessel_name || ', Type: ' || vessel_shiptype || ' (' || vessel_shiptype_text || '), Country: ' || country || ';';
-  ELSE
-    RETURN 'Vessel information not found.';
-  END IF;
-END;
-$$ LANGUAGE plpgsql;
 
 
 

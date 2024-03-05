@@ -1,10 +1,11 @@
-https://docs.mobilitydb.com/MobilityDB-workshop/master/ch01.html
 
-https://meridian.cs.dal.ca/wp-content/uploads/2020/11/AIS.pdf
+AIS Data Management: https://meridian.cs.dal.ca/wp-content/uploads/2020/11/AIS.pdf
+Anita Graser POSTGIS: https://anitagraser.com/tag/postgis/ 
+PostGIS-SpatioTemporal (Anita Graser) https://github.com/anitagraser/postgis-spatiotemporal/blob/master/plpgsql_detectstops.sql
 
-https://anitagraser.com/tag/postgis/ 
 
-https://github.com/anitagraser/postgis-spatiotemporal/blob/master/plpgsql_detectstops.sql
+	
+#this file includes some SQL-examples which might help you with your analysis
 
 CREATE DATABASE "ING3209" ;
 	

@@ -1,6 +1,5 @@
 # Scripts
 
-I denne mappen ligger følgende:
 
 ## clean_ais.py
 This script is designed to clean CSV files containing AIS (Automatic Identification System) data located in a specified folder. The script performs several cleaning operations, including:

@@ -164,12 +164,6 @@ USING GiST (geom3035);
 
 Query returned successfully in 3 hr 35 min
 
---create a table holding the military vessels (gir ikke resultat
-CREATE TABLE AS ais_data.military_vessels
-SELECT d.*, s.shiptype
-FROM ais_data.dynamic_ships d
-INNER JOIN ais_data.static_ships s ON d.MMSI = s.MMSI
-WHERE s.shiptype = '35';
 
 -- create a table holding the suspicious vessels
 CREATE TABLE ais_data.susp_vessels AS
@@ -196,7 +190,7 @@ limit 1000
 ;
 
 --Create table mil vessels
-CREATE VIEW ais_data.filtered_dynamic_ships_view AS
+CREATE VIEW ais_data.military_vessels AS
 SELECT *
 FROM ais_data.dynamic_ships
 WHERE MMSI IN (
@@ -216,8 +210,23 @@ WHERE MMSI IN (
     419100133
 );
 
+CREATE TABLE ais_data.russianships AS
+SELECT *
+FROM ais_data.dynamic_ships
+WHERE SUBSTRING(d.mmsi::text, 1, 3) = '273';
 
---add cnty_code in dynamic ships
+-- Create table with Chinese vessels
+CREATE TABLE ais_data.chinese_vessels AS
+SELECT *
+FROM ais_data.dynamic_ships
+WHERE SUBSTRING(mmsi::text, 1, 3) = '412' OR
+SUBSTRING(mmsi::text, 1, 3) = '413' OR
+SUBSTRING(mmsi::text, 1, 3) = '414'
+;
+
+
+
+--add cnty_code in dynamic ships (for tidkrevende, ble aldri gjort)
 ALTER TABLE ais_data.dynamic_ships ADD COLUMN cnty_code integer;
 UPDATE ais_data.dynamic_ships
 SET cnty_code = cnty_codes.digit
@@ -225,17 +234,91 @@ FROM ais_data.cnty_codes
 WHERE SUBSTRING(dynamic_ships.mmsi::text FROM 1 FOR 3)::integer = cnty_codes.digit;
 
 
---Create table with russian ships which includes
+--Create table with russian ships which includes (for tidkrevende og maskinen går tom for plass før query er ferdig..)
 DROP TABLE IF EXISTS ais_data.russianships;
 
 CREATE TABLE ais_data.russianships AS
-SELECT d.*, s.shiptype, s.shiptype_text
+SELECT d.*, s.shiptype, 
 FROM ais_data.dynamic_ships d
 JOIN ais_data.static_ships s ON d.MMSI = s.MMSI
-WHERE SUBSTRING(d.mmsi::text, 1, 3) = '273';
+WHERE SUBSTRING(d.mmsi, 1, 3) = '273';
 
 
---
+-- Select susp_vessels within 500 m of oil and gas facilities
+SELECT "facilityName", mmsi, shipname, min_t, max_t, (max_t - min_t) as dur
+FROM (
+    SELECT 
+        "facilityName", -- Facility name
+        mmsi, -- MMSI identifier of the ship
+        min(t) as min_t, -- First timestamp of a not moving position
+        max(t) as max_t  -- Last timestamp of a not moving position
+    FROM context_data."OilAndGasOffshoreConstructions" as q1 -- Facility location
+    INNER JOIN ais_data.susp_vessels as q2 -- Ship AIS positions
+    ON (
+        q2.t >= '2023-01-04 00:00:00' AND 
+        q2.t < '2023-03-20 00:00:00' AND -- Between January 4 and January 6, 2023
+        ST_dWithin(q1.geom, q2.geom3035, 1000) -- Ship position within 500m of the facility location
+    )
+    GROUP BY "facilityName", mmsi
+) as q3
+LEFT JOIN ais_data.ships as q4 -- Ship names
+ON (
+    q3.mmsi = q4.sourcemmsi
+);
+
+
+-- Select all vessels within 1000 m of oil and gas facilities	
+SELECT "facilityName", mmsi, shipname, min_t, max_t, (max_t - min_t) as dur
+FROM (
+    SELECT 
+        "facilityName", -- Facility name
+        mmsi, -- MMSI identifier of the ship
+        min(t) as min_t, -- First timestamp of a not moving position
+        max(t) as max_t  -- Last timestamp of a not moving position
+    FROM context_data."OilAndGasOffshoreConstructions" as q1 -- Facility location
+    INNER JOIN ais_data.dynamic_ships as q2 -- Ship AIS positions
+    ON (
+        q2.speed < 2 AND
+		q2.t >= '2023-01-04 00:00:00' AND 
+        q2.t < '2023-03-30 00:00:00' AND -- Between January 4 and January 6, 2023
+        ST_dWithin(q1.geom, q2.geom3035, 1000) -- Ship position within 500m of the facility location
+    )
+    GROUP BY "facilityName", mmsi
+) as q3
+LEFT JOIN ais_data.ships as q4 -- Ship names
+ON (
+    q3.mmsi = q4.sourcemmsi
+);
+Query complete 01:10:20.864 - 3660 rows
+	
+-- Select all russian vessels within 5000 m of Forsvaret installations	
+SELECT "HER_ETABNA", mmsi, shipname, min_t, max_t, (max_t - min_t) as dur
+FROM (
+    SELECT 
+        "HER_ETABNA", -- Facility name
+        mmsi, -- MMSI identifier of the ship
+        min(t) as min_t, -- First timestamp of a not moving position
+        max(t) as max_t  -- Last timestamp of a not moving position
+    FROM context_data."Forsvaret_2024" as q1 -- Facility location
+    INNER JOIN ais_data.russianships as q2 -- Ship AIS positions
+    ON (
+		q2.t >= '2023-01-04 00:00:00' AND 
+        q2.t < '2023-03-30 00:00:00' AND -- Between January 4 and January 6, 2023
+        ST_dWithin(q1.geom, q2.geom3035, 5000) -- Ship position within 500m of the facility location
+    )
+    GROUP BY "HER_ETABNA", mmsi
+) as q3
+LEFT JOIN ais_data.ships as q4 -- Ship names
+ON (
+    q3.mmsi = q4.sourcemmsi
+);
+
+
+
+
+
+
+
 
 -- SHP2PGSQL - convert from shapefiles to PGSQL-format
 /Library/PostgreSQL/15/bin/shp2pgsql -s 4230 -I /Users/luggerud/Downloads/pipLine/pipLine.shp context_data.pipeline > /Users/luggerud/Downloads/pipLine/outputfile.sql
@@ -265,6 +348,7 @@ ALTER TABLE context_data.infrastructure_point
 ALTER COLUMN geom TYPE geometry(Point,3035) USING ST_Transform(geom, 3035)
 ;
 
+
 --Index infrastructure
 CREATE INDEX idx_infrastructure_geom
 ON context_data.infrastructure
@@ -274,6 +358,40 @@ USING GiST (geom);
 CREATE INDEX idx_pipeline_geom
 ON context_data.pipeline
 USING GiST (geom);
+
+
+--Create vessel info function
+CREATE OR REPLACE FUNCTION get_vessel_info_v3 (
+  input_mmsi integer
+)
+RETURNS text AS $$
+DECLARE
+  vessel_imo integer;
+  vessel_name text;
+  vessel_shiptype integer;
+  vessel_shiptype_text text;
+  country text;
+BEGIN
+  SELECT shipname, imo, shiptype, shiptype_text, cnty INTO vessel_name, vessel_imo, vessel_shiptype, vessel_shiptype_text, country
+  FROM ais_data.static_ships
+  WHERE mmsi = input_mmsi
+  LIMIT 1;
+  
+  IF vessel_name IS NOT NULL AND vessel_imo IS NOT NULL THEN
+    RETURN '[' || vessel_imo || '] ' || vessel_name || ', Type: ' || vessel_shiptype || ' (' || vessel_shiptype_text || '), Country: ' || country || ';';
+  ELSE
+    RETURN 'Vessel information not found.';
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+
+
+
+
 
 --SPATIAL QUERY innen 500 meter fra olje og gassledning 10. februar
 SELECT pipname, mmsi, shipname, min_t, max_t, (max_t - min_t) as dur
@@ -321,23 +439,6 @@ WHERE facname = 'DRAUGEN'
 GROUP BY facname, mmsi) as q3
 LEFT JOIN ais_data.static_ships as q4 
 ON (q3.mmsi=q4.sourcemmsi);
-
-
---Vessel info function
-CREATE OR REPLACE FUNCTION get_vessel_info (
-  mmsi integer
-)
-RETURNS text AS $$
-DECLARE
-  vessel_imo integer; 
-  vessel_name text;
-BEGIN
-  SELECT shipname, imo INTO vessel_name, vessel_imo
-  FROM ais_data.static_ships
-  WHERE sourcemmsi=mmsi LIMIT 1;
-  RETURN '[' || vessel_imo || ']' || vessel_name;
-END;
-$$ LANGUAGE plpgsql;
 
 
 -- Count distinct ships in a given time interval (10. februar)

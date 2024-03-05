@@ -5,7 +5,7 @@ This repository contains information about the task and dataset used. It include
 The task aims to help you work with large unwieldy datasets and to familiarize you with QGIS as a tool.
 
 
-# Programvare
+## Software
 The following software needs to be downloaded and installed:
 * [PostgreSQL med PostGIS extension](https://www.postgresql.org/download/)
 * [QGIS](https://qgis.org/en/site/forusers/download.html)

@@ -1,32 +1,32 @@
-# Bakgrunn
-Dette repoet inneholder info om oppgaven og datasettet som bruker i stordata-uka på milgeofordypningen på KSING. Det inneholder både link til datasettet, informasjon om datasettet, samt noen verktøy som kan hjelpe deg med å bearbeide dataene før de imporeteres inn i PostgreSQL-databasen.
+# Background
+This repository contains information about the task and dataset used. It includes links to the dataset, information about the dataset, as well as some tools that can help you process the data before importing it into the PostgreSQL database.
 
-## Hensikt
-Oppgaven skal hjelpe dere med..., samt bli kjent med QGIS.
-Bli kjent med enterprise databaser
+## Purpose
+The task aims to help you work with large unwieldy datasets and to familiarize you with QGIS as a tool.
+
 
 # Programvare
-Last ned og installer følgende:
+The following software needs to be downloaded and installed:
 * [PostgreSQL med PostGIS extension](https://www.postgresql.org/download/)
 * [QGIS](https://qgis.org/en/site/forusers/download.html)
 * [Python](https://www.python.org/)
-* 
+ 
 
 
 
-# Datasett
-Kan lastes ned [her](https://drive.google.com/file/d/1C5RwRdRgCSQ0EP-kysDz_dI5AcpxKXXP/view?usp=share_link). Datasettet er lastet ned fra Kystverkets åpne datastrøm. 
-## Begrensninger
-Denne datastrømmen har noen begrensninger:
-- Gjelder for det geografiske område innenfor norsk økonomisk sone, fiskerivernsonen ved Svalbard og vernesonen ved Jan Mayen.
-- Viser ikke fiskefartøy under 15 meter.
-- Viser ikke fritidsfartøy under 45 meter.
+# Dataset
+Can be downloaded [here](https://drive.google.com/file/d/1C5RwRdRgCSQ0EP-kysDz_dI5AcpxKXXP/view?usp=share_link). The dataset is downloaded from the [Norwegian Coastal Administration's open data stream.](https://www.kystverket.no/navigasjonstjenester/ais/tilgang-pa-ais-data/)
 
-## Tidsrom
-* 22 February 2023 - 29 March
+## Limitations
+This data stream has some limitations:
 
-## Kilder
-* Kystverket
+* Applies to the geographical area within the Norwegian economic zone, the fisheries protection zone around Svalbard, and the protection zone around Jan Mayen.
+* Does not show fishing vessels under 15 meters.
+* Does not show recreational vessels under 45 meters.
+
+## Timeframe
+* 22 Februar 2023 - 28 Mars
+
 
 ## Coverage of Norwegian AIS data
 ![Bilde av dekningsområdet](https://developer.barentswatch.no/assets/images/OpenAisArea2-c5332d2a6ed8f25fba1b5b064ad72b38.PNG)
@@ -36,16 +36,18 @@ If needed, it is possible to [download](https://web.ais.dk/aisdata/) additional 
 
 
 
+# Tutorials
+1. A basic introduction to SQL is provided here: (https://www.postgresql.org/docs/15/tutorial.html)
+2. A basic POSTGIS tutorial is found here: (https://postgis.net/workshops/postgis-intro/index.html)
+3. A more specific and specialized tutorial utilizing the POSTGIS functionality on AIS data in a maritime environment is provided here: (https://hal.science/hal-03137050v1)
+
+# Useful scripts
+In the folder [scripts](scripts) there are several useful scripts that will help you with preparing and cleaning your data prior to importing them in to your database.
 
 # SQL
-In ARCGIS queries are used to search for and select a subset of features and table records. All query expressions in ArcGIS Pro use Structured Query Language (SQL) to formulate these search specifications. The query builder is used to construct the queries in numerous places. (https://pro.arcgis.com/en/pro-app/3.1/help/mapping/navigation/write-a-query-in-the-query-builder.htm)
-Link til nyttig ressurs: (https://pro.arcgis.com/en/pro-app/3.1/help/mapping/navigation/sql-reference-for-elements-used-in-query-expressions.htm)
-## Tutorials
-1. A basic introduction to SQL is provided here: (https://www.postgresql.org/docs/15/tutorial.html)
-2. A more specific and specialized tutorial utilizing the POSTGIS functionality in a maritime environment is provided here: (https://hal.science/hal-03137050v1)
+Structured query language (SQL) is a programming language for storing and processing information in a relational database. A relational database stores information in tabular form, with rows and columns representing different data attributes and the various relationships between the data values. You can use SQL statements to store, update, remove, search, and retrieve information from the database. You can also use SQL to maintain and optimize database performance.
 
-## Useful scripts
-In the folder [scripts](scripts) there are several useful scripts that will help you with preparing and cleaning your data prior to importing them in to your database.
+Structured query language (SQL) is a popular query language that is frequently used in all types of applications. Data analysts and developers learn and use SQL because it integrates well with different programming languages. For example, they can embed SQL queries with the Java programming language to build high-performing data processing applications with major SQL database systems such as Oracle or MS SQL Server. SQL is also fairly easy to learn as it uses common English keywords in its statements.
 
 ## PostGRESQL
 PostgreSQL, often referred to simply as Postgres, is a powerful, open-source object-relational database management system (ORDBMS). It has earned a strong reputation for its proven architecture, reliability, data integrity, robust feature set, and extensibility. Here's a quick introduction to some of its key features and aspects:
@@ -69,8 +71,6 @@ PostgreSQL, often referred to simply as Postgres, is a powerful, open-source obj
 8. **Full Text Search**: Includes powerful full-text search capabilities that can search through large datasets to find matching strings, words, or phrases.
 
 9. **Internationalization**: Supports international character sets, including multibyte character encodings and full support for Unicode.
-
-   Kilde: CHATGPT
 
 
 ## POSTGIS

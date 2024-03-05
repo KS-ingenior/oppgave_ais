@@ -6,9 +6,9 @@ import glob
 
 # Database connection parameters
 db_config = {
-    'dbname': 'ING3209', # Replace with your actual PostgreSQL database
+    'dbname': 'mydb', # Replace with your actual PostgreSQL database
     'user': 'postgres',
-    'password': '1750',  # Replace 'your_password' with your actual PostgreSQL password
+    'password': '1234',  # Replace 'your_password' with your actual PostgreSQL password
     'host': 'localhost',
     'port': '1234'  # Specify the port number here
 }

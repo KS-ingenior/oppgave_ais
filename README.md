@@ -25,7 +25,7 @@ This data stream has some limitations:
 * Does not show recreational vessels under 45 meters.
 
 ## Timeframe
-* 22 Februar 2023 - 28 Mars
+* 22 February 2023 - 28 March
 
 
 ## Coverage of Norwegian AIS data

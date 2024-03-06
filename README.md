@@ -15,7 +15,7 @@ The following software needs to be downloaded and installed:
 
 
 # Dataset
-Can be downloaded [here](https://drive.google.com/file/d/1C5RwRdRgCSQ0EP-kysDz_dI5AcpxKXXP/view?usp=share_link). The dataset is downloaded from the [Norwegian Coastal Administration's open data stream.](https://www.kystverket.no/navigasjonstjenester/ais/tilgang-pa-ais-data/)
+Can be downloaded [here](https://drive.google.com/file/d/1jICGKZWZsahZKWO_HfnoSPi9EUVjixmO/view?usp=sharing). The dataset is downloaded from the [Norwegian Coastal Administration's open data stream.](https://www.kystverket.no/navigasjonstjenester/ais/tilgang-pa-ais-data/)
 
 ## Limitations
 This data stream has some limitations:

@@ -320,6 +320,15 @@ ON (
 );
 
 
+-- Create a table with linesegments from the table mil_vessels
+CREATE TABLE mil_vessel_line AS
+SELECT
+  mmsi, ST_MakeLine(geom3035 ORDER BY t ASC) AS line_geom
+FROM
+    ais_data."mil_vessel"
+GROUP BY
+    mmsi;
+
 
 
 ----SØPPELBØTTE-----

@@ -331,6 +331,106 @@ GROUP BY
 
 
 
+----- Create segment between consecutive points
+
+CREATE INDEX idx_dynamic_ships_mmsi_t ON ais_data.russianships
+USING btree (mmsi,t); -- index on ship identifier and time
+
+CREATE TABLE data_analysis.segments AS
+	SELECT mmsi, t1, t2, speed1, speed2,
+	p1, p2, 
+	st_makeline(p1,p2) as segment, -- create a line segment from points
+	st_distance(p1,p2) as distance, -- compute distance between points
+	extract(epoch FROM (t2-t1)) as duration_s, -- convert timestamps into seconds
+	(st_distance(p1,p2)/extract(epoch FROM (t2-t1))) as speed_m_s -- computed speed in m/s
+	FROM
+	(SELECT
+        mmsi, -- MMSI ship identifier of the row  
+		LEAD(mmsi) OVER (ORDER BY mmsi, t) as mmsi2, -- MMSI of the next row
+        t as t1, -- start of the segment
+        LEAD(t) OVER (ORDER BY mmsi, t) as t2, -- end of the segment
+        speed as speed1, -- initial speed
+        LEAD(speed) OVER (ORDER BY mmsi, t) as speed2, -- final speed
+	    geom3035 as p1, -- initial point
+        LEAD(geom3035) OVER (ORDER BY mmsi, t) as p2 -- final point
+		FROM ais_data.russianships
+	 ) as q1
+	 WHERE 
+	 mmsi=mmsi2 AND t2>t1; --filter out different mmsi numbers and duplicated timestamps
+	 
+CREATE INDEX idx_segments_speed ON data_analysis.segments 
+USING btree (speed1,speed2);
+
+CREATE INDEX idx_segments_s ON data_analysis.segments 
+USING gist (segment);
+
+------- Detect the beginning of a stop event 
+DROP TABLE IF EXISTS data_analysis.stop_begin;
+CREATE TABLE data_analysis.stop_begin AS
+    SELECT mmsi, t2 as t_begin -- the stop event starts at first steady position
+    FROM data_analysis.segments
+    WHERE speed1>0.1 AND speed2<=2.0; 
+
+CREATE INDEX idx_stop_begin_mmsi_t ON data_analysis.stop_begin 
+USING btree (mmsi,t_begin);
+
+-- Detect the end of a stop event
+-- *** SQL QUERY #Q5.2.2 ***
+DROP TABLE IF EXISTS data_analysis.stop_end;
+CREATE TABLE data_analysis.stop_end AS
+    SELECT mmsi, t1 as t_end -- the stop event ends at last steady position
+    FROM data_analysis.segments
+    WHERE speed1<=0.1 AND speed2>2.0; 
+
+CREATE INDEX idx_stop_end_mmsi_t ON data_analysis.stop_end 
+USING btree (mmsi,t_end);
+
+-- Create the loitering table
+-- *** SQL QUERY #Q5.2.3 ***
+DROP TABLE IF EXISTS data_analysis.stops;
+CREATE TABLE data_analysis.stops AS
+    SELECT
+        mmsi, -- ship identifier
+        t_begin, -- start of the stop event
+        t_end, -- end of the stop event
+        extract(epoch FROM (t_end-t_begin)) as duration_s -- duration of the stop in seconds
+    FROM 
+	data_analysis.stop_begin
+    INNER JOIN LATERAL -- only keep stops having existing stop end 
+    ( 
+    SELECT t_end FROM data_analysis.stop_end 
+    WHERE 
+		stop_begin.mmsi=stop_end.mmsi AND -- same MMSI
+        t_begin<=t_end -- end timestamp must be right after the beginning of the stop event
+    ORDER BY t_end LIMIT 1 -- only select the first next detected stop end
+    ) AS q2 ON (true);
+
+-- Compute the centroid of the stops and number of positions
+-- *** SQL QUERY #Q5.2.4 ***
+ALTER TABLE data_analysis.stops ADD COLUMN centr3035 geometry(Point,3035);
+ALTER TABLE data_analysis.stops ADD COLUMN nb_pos integer;
+
+-- Compute the centroid and number of positions
+-- *** SQL QUERY #Q5.2.4 ***
+UPDATE data_analysis.stops SET (centr3035, nb_pos) = (
+    SELECT 
+	st_centroid(st_collect(geom3035)), -- compute the centroid of a multipoint geometry
+	count(*) as nb -- count the number of points
+    FROM ais_data.dynamic_ships -- get the existing points in the timestamp range
+    WHERE mmsi=stops.mmsi AND t>=stops.t_begin AND t<=stops.t_end);
+
+-- Compute the distance of each point to the centroid to analyse point cloud dispersion
+-- *** SQL QUERY #Q5.2.5 ***
+ALTER TABLE data_analysis.stops ADD COLUMN avg_dist_centroid numeric;
+ALTER TABLE data_analysis.stops ADD COLUMN max_dist_centroid numeric;
+
+UPDATE data_analysis.stops SET (avg_dist_centroid, max_dist_centroid) = (
+    SELECT avg(d), max(d) 
+    FROM ( 
+        SELECT st_distance(centr3035,geom3035) as d -- compute the distance to centroid for each point
+        FROM ais_data.dynamic_ships -- get the existing points in the timestamp range
+        WHERE mmsi=stops.mmsi AND t>=stops.t_begin AND t<=stops.t_end) as q1)
+
 ----SØPPELBØTTE-----
 # her legges queries som ikke blir brukt eller ikke fungerer, men som jeg ikke ønsker å slette
 

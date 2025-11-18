@@ -1,4 +1,33 @@
+2025
 
+--select all vessels from EU designated list (downloaded from https://www.dma.dk/growth-and-framework-conditions/maritime-sanctions/sanctions-against-russia-and-belarus/eu-vessel-designations)
+
+
+	
+	
+	
+	
+	
+	
+	SELECT imo, mmsi
+	FROM context_data.eudesignated
+	LIMIT 20;
+
+create table data_analysis.rus_vessel_line as SELECT     mmsi,     ST_SimplifyVW(         ST_MakeLine(geom3035 ORDER BY t),         25        ) AS line_geom FROM data_analysis.rus_vessels GROUP BY mmsi	
+
+UPDATE context_data.eudesignated AS a SET mmsi = b.sourcemmsi FROM ais_data.ships AS b WHERE a.imo = b.imo
+
+
+
+
+
+
+
+
+
+
+
+	
 AIS Data Management: https://meridian.cs.dal.ca/wp-content/uploads/2020/11/AIS.pdf
 Anita Graser POSTGIS: https://anitagraser.com/tag/postgis/ 
 PostGIS-SpatioTemporal (Anita Graser) https://github.com/anitagraser/postgis-spatiotemporal/blob/master/plpgsql_detectstops.sql
@@ -828,7 +857,16 @@ SELECT mmsi,speed,id, ST_MakeLine(geom4230 ORDER BY timestamp) AS line
 FROM ais_data.dynamic_ships
 GROUP BY id, mmsi, speed;
 
-
+--create line geometry from points--
+create table data_analysis.rus_vessel_line as
+SELECT
+    mmsi,
+    ST_SimplifyVW(
+        ST_MakeLine(geom3035 ORDER BY t),
+        25   -- tolerance in meters, tune as needed
+    ) AS line_geom
+FROM data_analysis.rus_vessels
+GROUP BY mmsi;
 
 -- CREATE table suspicious vessels
 CREATE TABLE context_data.suspicious_vessels (

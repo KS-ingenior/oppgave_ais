@@ -399,6 +399,7 @@ The functions `ST_Equals`, `ST_Disjoint`, `ST_Intersects`, `ST_Touches`,`ST_Cros
 <img width="400" alt="Figure 5" src="https://github.com/user-attachments/assets/9282e9ba-020e-4863-9013-e3e50dc68552" />
 
 <img width="400" alt="Figure 6" src="https://github.com/user-attachments/assets/3ea41c1f-7bee-4098-9e73-b66b5a24d647" />
+
 An extensive presentation of all these geometry processing functions is available on [PostGIS website](https://postgis.net/docs/reference.html#Geometry_Processing).
 The query in the following SQL example illustrates the use of such spatial functions. It searches for ships (name and unique identifier, i.e. the ship MMSI) that stopped within 500m of the oil rig "DRAUGEN". For each ship,the name of the oil rig and the time spent by the vessel close to Draugen is also shown.
 

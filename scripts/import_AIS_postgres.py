@@ -1,4 +1,5 @@
-# pip install psycopg2-binary pandas
+#remember to check if you have installed the right Python packages. If not use pip install pandas.
+#Double check that the column mapping is correct and fits your database
 
 import pandas as pd
 from sqlalchemy import create_engine
@@ -6,11 +7,11 @@ import glob
 
 # Database connection parameters
 db_config = {
-    'dbname': 'mydb', # Replace with your actual PostgreSQL database
-    'user': 'postgres',
-    'password': '1234',  # Replace 'your_password' with your actual PostgreSQL password
-    'host': 'localhost',
-    'port': '1234'  # Specify the port number here
+    'dbname': 'INGOF3205',#change if needed
+    'user': 'postgres',#change if needed
+    'password': '',#change if needed
+    'host': 'localhost',#change if needed
+    'port': '5432', #change if needed
 }
 
 # SQLAlchemy engine for PostgreSQL
@@ -18,8 +19,8 @@ engine_url = f"postgresql+psycopg2://{db_config['user']}:{db_config['password']}
 engine = create_engine(engine_url)
 
 # Paths to the CSV files for static and dynamic ships (change to your actual file path)
-#static_ships_path = r'C:\Users\MilGeo2\Documents\Stordata (AIS) 2024\AIS-data pr dag\ais-status/*.csv'
-dynamic_ships_path = r'C:\Users\MilGeo2\Documents\Stordata (AIS) 2024\AIS-data pr dag\ais-pos/*.csv'  # Provide the correct path here
+static_ships_path = 'C:/insert/correct/filepath/ais-status/*.csv' # Provide the correct path here and hash/unhash depending on your import
+#dynamic_ships_path = 'C:/insert/correct/filepath/ais-pos/*.csv'  # Provide the correct path here and hash/unhash depending on your impor
 
 # Function to import CSV files into a PostgreSQL table
 def import_csv_to_db(path, table_name, schema_name, column_mapping=None):
@@ -33,7 +34,7 @@ def import_csv_to_db(path, table_name, schema_name, column_mapping=None):
 
 # Define column mapping for static ships
 static_ships_column_mapping = {
-    'mmsi': 'mmsi',
+    'mmsi': 'sourcemmsi',
     'type': 'type',
     'imo': 'imo',
     'callsign': 'callsign',
@@ -42,7 +43,7 @@ static_ships_column_mapping = {
     'shiptype_text': 'shiptype_text',
     'eta': 'eta',
     'destination': 'destination',
-    'timestamp_utc': 'timestamp_utc',
+    'timestamp_utc': 'datetime',
 }
 
 # Define column mapping for dynamic ships
@@ -60,9 +61,9 @@ dynamic_ships_column_mapping = {
  }
 
 # Import static ships with column mapping
-#import_csv_to_db(static_ships_path, 'static_ships', 'ais_data', static_ships_column_mapping)
+import_csv_to_db(static_ships_path, 'static_ships', 'ais_data', static_ships_column_mapping)
 
 # Import dynamic ships with column mapping
-import_csv_to_db(dynamic_ships_path, 'dynamic_ships', 'ais_data', dynamic_ships_column_mapping)
+#import_csv_to_db(dynamic_ships_path, 'dynamic_ships', 'ais_data', dynamic_ships_column_mapping)
 
 print("All files have been imported successfully.")

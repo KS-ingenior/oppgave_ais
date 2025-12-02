@@ -393,7 +393,9 @@ WHERE geom IS NOT NULL;
 Spatial queries evaluate the relationships that hold among objects’ geometries. PostGIS supports the 8 region connection calculus (RCC8) and the Dimensionally Extended nine-Intersection Model (DE-9IM), and complies with the OGC Simple Feature Access ([20]), which defines the supported routines to test spatial relationships between two geometric objects. PostGIS functions that output a value, either a distance (i.e. ST Distance) or a Boolean value (all the others) are shown in Figure 4. PostGIS functions that output a geometry are shown in Figure 5. All functions can be applied between geometries of various types (i.e. POINTS,LINESTRINGS or POLYGONS), as far as the coordinates of these objects are defined in the same CRS. These spatial relationship functions can be combined with temporal operators, enabling to express complex spatio-temporal queries.
 
 <img width="400" alt="Figure 4" src="https://github.com/user-attachments/assets/289e5915-faa0-4738-bc35-4051cd0ef141" />
+
 The functions `ST_Equals`, `ST_Disjoint`, `ST_Intersects`, `ST_Touches`,`ST_Crosses`, `ST_Within`, `ST_Contains`, and `ST_Overlaps` evaluate whether the corresponding spatial relationship holds between two input geometries, and return a boolean value. The function ST Distance returns a real number representing the minimum distance between the two geometries. Other functions return the geometries resulting from the application of geometric operations (`ST_Buffer` and `ST_ConvexHull`) (cf. Figure 5) or set-based operations (e.g. `ST_Intersection`,`ST_Difference`, `ST_Union`, `ST_SymDifference`) (cf. Figure 6) .
+
 <img width="400" alt="Figure 5" src="https://github.com/user-attachments/assets/9282e9ba-020e-4863-9013-e3e50dc68552" />
 
 <img width="400" alt="Figure 6" src="https://github.com/user-attachments/assets/3ea41c1f-7bee-4098-9e73-b66b5a24d647" />

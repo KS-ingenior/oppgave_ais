@@ -43,7 +43,7 @@ static_ships_column_mapping = {
     'shiptype_text': 'shiptype_text',
     'eta': 'eta',
     'destination': 'destination',
-    'timestamp_utc': 'datetime',
+    'timestamp_utc': 'timestamp_utc',
 }
 
 # Define column mapping for dynamic ships

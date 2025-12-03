@@ -156,6 +156,9 @@ WITH (
 ### 4.2 Loading the data into the database
 The new table can now be populated. Data can be manually inserted into the existing tables using the SQL statement INSERT INTO or, alternatively, directly from files using the PostgreSQL command COPY FROM. The following example shows how to load into the table ´aid_data.staticship´ the static ship information stored in the Comma Separated Values (CSV) stored in the folder named `ais-status`. Her the files area on dates, which is included in the downloaded dataset. In the command below,
 
+> [!TIP]
+If you need to be a bit more effective, use this [Python-script](scripts/import_AIS_postgres.py) to help you import all files into the database.
+
 ```sql
 COPY ais_data.static_ships (
     sourcemmsi,
@@ -174,8 +177,7 @@ DELIMITER ','
 CSV HEADER;
 ```
 
-> [!TIP]
-If you need to be a bit more effective, use a [Python-script](scripts/import_AIS_postgres.py) to help you import all files into the database.
+
 
 
 As soon as the database table is filled with static data, it can be queried using SQL commands. The query in the next example counts how many different ship names are listed in the table `ais_data.static_ships`

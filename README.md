@@ -304,12 +304,35 @@ In order to analyse the movement of ships, it is necessary to load their positio
 ## Task 4!
 - [ ] Within the schema `ais_data`, create a new table named `dynamic_ships`. Fill it with the data of the folder `ais-pos`
 
+```sql
+-- Create table that contains the moving data
+CREATE TABLE ais_data.dynamic_ships(
+  course double precision,
+  datetime datetime,
+  heading integer,
+  lat double precision,
+  lon double precision,
+  mmsi integer,
+  speed double precision,
+  status_text text,
+  turn text,
+  type integer,
+  id bigserial,
+  CONSTRAINT dynamic_ships_pkey PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+```
+
 The following query counts the number of the ships positions contained in the
 table `dynamic_ships`
 
 ```sql
 SELECT COUNT(*) FROM ais_data.dynamic_ships;
 ```
+
+
 
 ### 4.X  make data temporal
 In order to be able to make queries based on time, use the following query to add a time column.

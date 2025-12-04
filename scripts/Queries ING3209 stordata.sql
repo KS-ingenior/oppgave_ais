@@ -123,7 +123,7 @@ $$ LANGUAGE plpgsql;
 -- Create table that contains the moving data
 CREATE TABLE ais_data.dynamic_ships(
   course double precision,
-  datetime text,
+  datetime datetime,
   heading integer,
   lat double precision,
   lon double precision,

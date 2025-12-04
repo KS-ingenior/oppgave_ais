@@ -311,6 +311,14 @@ table `dynamic_ships`
 SELECT COUNT(*) FROM ais_data.dynamic_ships;
 ```
 
+### 4.X  make data temporal
+In order to be able to make queries based on time, use the following query to add a time column.
+
+```sql
+ALTER TABLE ais_data.dynamic_ships ADD COLUMN t timestamp without time zone;
+UPDATE ais_data.dynamic_ships SET t = to_timestamp(datetime,'YYYY-MM-DD HH24:MI:SS.MS');
+```
+
 ### 4.7 Make it faster
 The queries of the previous section may take a while to complete. This is due to the
 size of the table dynamic ships and because the table needs to be fully scanned

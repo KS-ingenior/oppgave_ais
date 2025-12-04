@@ -308,7 +308,7 @@ In order to analyse the movement of ships, it is necessary to load their positio
 -- Create table that contains the moving data
 CREATE TABLE ais_data.dynamic_ships(
   course double precision,
-  datetime datetime,
+  datetime timestamp,
   heading integer,
   lat double precision,
   lon double precision,

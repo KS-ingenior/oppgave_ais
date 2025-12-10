@@ -1,3 +1,13 @@
+Todo:
+* Skrive noe mer om oppgave og hensikt i innledningen
+* Tydeligere forventning om progresjon i oppgavene, dvs hvor langt bør du ha kommet til gitte tidspunkt. Ambisjonen bør være at de bør være ferdig med all import og prepping av data (index o.l.) slik at dag 2 ogdag 3 kan brukes på analyser.
+* Slå sammen dataene til større filer for å gjøre importen enklere. Kikke på HAIS og danske data for å sjekke hvordan dataene er strukturert, og la seg inspirerere av dette.
+* Vurdere om det skal være en lett sti og en vanskelig sti, som kan benyttes under data import.
+* Legge til mer feilkorreksjon under "clean" av data
+* Lage et underkapitel om visulaisering av AIS-data. Ta utgangspunkt i noe som dette kanskje: https://www.youtube.com/watch?v=XSfeKSQ-JG0
+* Skrive inn mer av scenario i teksten slik at de får mer hjelp med analysene?
+* Lage en backup av databasen som kan gis til de som ikke har kommet så langt som ønsket etter dag 1. Vil gjøre det enklere å følge progresjonen
+
 This assignment is based on ["Maritime Data Processing in Relational Databases"](https://hal.science/hal-03137050) by Etienne et.al [^1]
 
 

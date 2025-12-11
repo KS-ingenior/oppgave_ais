@@ -1,8 +1,10 @@
+'/Users/luggerud/Downloads/Datasett Iron Foxes-2/ais-pos'
+
 import os
 import pandas as pd
 import numpy as np
 
-folder_path = '/set/folder/path'
+folder_path = '/Users/luggerud/Downloads/Datasett Iron Foxes-2/ais-pos'
 
 # iterate through all CSV files in the folder
 for file_name in os.listdir(folder_path):
@@ -13,9 +15,9 @@ for file_name in os.listdir(folder_path):
         # read the input CSV file
         ais_data = pd.read_csv(input_file)
 
-        # remove rows with invalid latitude or longitude values
-        ais_data = ais_data[(ais_data["lat"] > -90) & (ais_data["lat"] < 90) &
-                            (ais_data["lon"] > -180) & (ais_data["lon"] < 180)]
+        # remove rows with invalid latitude or longitude values or values far outside Norway
+        ais_data = ais_data[(ais_data["lat"] > 50) & (ais_data["lat"] < 90) &
+                            (ais_data["lon"] > -10) & (ais_data["lon"] < 45)]
 
         # convert "speed" column to numeric type and set NaN values to NULL
         ais_data["speed"] = pd.to_numeric(ais_data["speed"], errors='coerce')

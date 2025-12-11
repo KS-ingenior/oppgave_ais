@@ -468,7 +468,7 @@ LEFT JOIN ais_data.ships as q4
 ON (q3.mmsi=q4.sourcemmsi);
 ```
 
-## Task 5!
+## Task 6!
 - [ ] What vessel has been close to Draugen during 11. February? For how long was it within 500, and what type of ship is it?
 - [ ] Visualize the vessels movement during 11. February.
 

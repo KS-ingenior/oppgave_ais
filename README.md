@@ -407,6 +407,16 @@ the CRS’ SRID of the newly created column. As the table `dynamic_ships` has 47
 ALTER TABLE ais_data.dynamic_ships ADD COLUMN geom geometry(Point,4326);
 UPDATE ais_data.dynamic_ships
 SET geom=ST_SetSRID (ST_MakePoint(lon,lat),4326) ;
+
+CREATE INDEX idx_dynamic_ships_geom
+ON ais_data.dynamic_ships
+USING GiST (geom);
+
+CREATE INDEX idx_dynamic_ships_mmsi
+ON ais_data.dynamic_ships
+USING btree (mmsi) ;
+
+CREATE INDEX idx_dynamic_ships_mmsi_t ON ais_data.dynamic_ships USING btree (mmsi,datetime);
 ```
 
 The database must be aware of the data’s CRS before executing the commands in the example above. Data’s CRS must be listed in the system table

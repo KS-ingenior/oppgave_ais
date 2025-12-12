@@ -434,7 +434,10 @@ WHERE s.cnty_code = 273;
 
 
 ##Task 6
-- [ ] Create a table or a materialzed view which contains all the vessels in the so called "Shadow Fleet", and included in your database. Write a couple of sentences explaining your decision. 
+- [ ] Create a table or a materialzed view which contains all the vessels in the so called "Shadow Fleet", and included in your database. Write a couple of sentences explaining your decision.
+- [ ] 
+> [!TIP]
+To create this table or materialized view you have to combine `context_data.eudesignated` (for IMO numbers), `ais_data.ships` (for IMO-to-MMSI mapping), and `ais_data.dynamic_ships` (for movement data)
 
 ### 5 Spatial queries
 Spatial queries evaluate the relationships that hold among objects’ geometries. PostGIS supports the 8 region connection calculus (RCC8) and the Dimensionally Extended nine-Intersection Model (DE-9IM), and complies with the OGC Simple Feature Access ([20]), which defines the supported routines to test spatial relationships between two geometric objects. PostGIS functions that output a value, either a distance (i.e. ST Distance) or a Boolean value (all the others) are shown in Figure 4. PostGIS functions that output a geometry are shown in Figure 5. All functions can be applied between geometries of various types (i.e. POINTS,LINESTRINGS or POLYGONS), as far as the coordinates of these objects are defined in the same CRS. These spatial relationship functions can be combined with temporal operators, enabling to express complex spatio-temporal queries.

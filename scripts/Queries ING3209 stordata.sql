@@ -18,7 +18,7 @@ CREATE EXTENSION postgis;
 CREATE TABLE ais_data.static_ships(
   sourcemmsi integer,         -- MMSI number, unique identifier of the vessel's AIS transceiver
   type integer,               -- AIS message type (e.g., 5 for static vessel data)
-  imo double precision,       -- IMO number, the vessel's international identification number
+  imo integer,       		  -- IMO number, the vessel's international identification number
   callsign text,              -- Callsign of the vessel
   shipname text,              -- Name of the vessel as reported
   shiptype integer,           -- Numeric ship type code according to AIS standards
@@ -55,6 +55,8 @@ SET cnty = cnty_codes.country,
     cnty_code = cnty_codes.digit
 FROM context_data.cnty_codes
 WHERE SUBSTRING(static_ships.mmsi::text FROM 1 FOR 3)::integer = cnty_codes.digit;
+
+
 
 
 --create view ships 
@@ -204,6 +206,36 @@ WHERE MMSI IN (
     273357360, 273131200, 273113600, 273399790, 273350540,
     273380520, 273357360
 );
+
+-- Create table with vessels within 20 000 m of Andøya
+CREATE TABLE data_analysis.ships_ivo_andoya AS
+SELECT
+    mmsi,
+    shipname,
+    shiptype,
+    shiptype_text,
+    min_t,
+    max_t,
+    EXTRACT(EPOCH FROM (max_t - min_t))/60 AS dur,
+    ship_geom AS geom,
+    speed
+FROM (
+    SELECT
+        q2.mmsi,
+        min(q2.t) AS min_t,
+        max(q2.t) AS max_t,
+        q2.geom AS ship_geom,
+        q2.speed
+    FROM context_data.forsvaret AS q1
+    INNER JOIN ais_data.dynamic_ships AS q2
+        ON ST_dWithin(q1.geom::geography, q2.geom::geography, 20000)
+    WHERE q1.fo_navn = 'ANDØYA FLYSTASJON'
+    GROUP BY q2.mmsi, q2.geom, q2.speed
+) AS q3
+LEFT JOIN ais_data.ships AS q4
+    ON (q3.mmsi = q4.sourcemmsi)
+
+
 
 
 --Select all the military vessels 

@@ -147,7 +147,7 @@ CREATE SCHEMA "ais_data" ;
 CREATE TABLE ais_data.static_ships(
   sourcemmsi integer,         -- MMSI number, unique identifier of the vessel's AIS transceiver
   type integer,               -- AIS message type (e.g., 5 for static vessel data)
-  imo double precision,       -- IMO number, the vessel's international identification number
+  imo integer,                 -- IMO number, the vessel's international identification number
   callsign text,              -- Callsign of the vessel
   shipname text,              -- Name of the vessel as reported
   shiptype integer,           -- Numeric ship type code according to AIS standards
@@ -188,16 +188,20 @@ CSV HEADER;
 ```
 
 
-
-
-As soon as the database table is filled with static data, it can be queried using SQL commands. The query in the next example counts how many different ship names are listed in the table `ais_data.static_ships`
+As soon as the database table is filled with static data, it can be queried using SQL commands. The query in the next example counts how many different ship names are listed in the table `ais_data.static_ships`. Note the time spent on the query.
 
 ```sql
 SELECT DISTINCT shipname
 FROM ais_data.static_ships;
 ```
 
-### 4.3 Integrating contextual data
+### 4.X Make it faster
+
+```sql
+CREATE INDEX idx_static_ships_mmsi ON ais_data.static_ships USING btree (sourcemmsi);
+```
+
+### 4.3 Integrating contextual data - Vurder å flytte denne delen lenger ned slik at de får startet med det tidkrevende arbeidet tidlig
 The dataset also contain complementary data like the location of the Norwegian armed forces, oil and gas pipeline, other relevant oil infrastructure, submarine cables, a list of suspicious vessel etc. These data have a different nature than AIS data, which are continuously streamed, and provide information useful to contextualise and understand the vessel movements. Conveniently, a dedicated database schema, with name 'context_data', can be created for these data.
 
 ## Task 2
@@ -259,41 +263,36 @@ You may also use the Database Manager tool in QGIS to import the data into the t
 
 
 #### 4.4.2 Adding Country Information to Ship Data
-This prepares the table for enrichment by adding two columns.
-
-```sql
-ALTER TABLE ais_data.static_ships ADD COLUMN cnty text -- the country name;
-ALTER TABLE ais_data.static_ships ADD COLUMN cnty_code integer --  the 3-digit MMSI prefix ;
-```
-
-This query enriches the `ais_data.static_ships` by extracting the first three digits of each vessel’s MMSI number, which identifies the country. It then joins the ship table with the `context_data.cnty_codes` table using this prefix and populates each row with the correct country name in the `cnty` column and the numeric MMSI prefix in the `cnty_code` column.
-
-```sql
-UPDATE ais_data.static_ships
-SET cnty = cnty_codes.country,
-    cnty_code = cnty_codes.digit
-FROM context_data.cnty_codes
-WHERE SUBSTRING(static_ships.mmsi::text FROM 1 FOR 3)::integer = cnty_codes.digit;
-```
+In the view below we combine the table and get all the data in one. 
 
 ### 4.5 Creating a view
 The table `ais_data.static_ships` contains duplicated information about ships, transmitted at different timestamps, because nominative messages (ITU 5, ITU 19, and ITU 24) are automatically repeated at regular time intervals. The duplicated rows in this table can be grouped together using a SQL view, as shown in the following example.
 
 ```sql
---create view ships 
-CREATE OR REPLACE VIEW ais_data.ships AS SELECT
-  sourcemmsi,
-  imo,
-  callsign,
-  shipname,
-  shiptype,
-  shiptype_text,
-  cnty,
-  cnty_code
-FROM ais_data.static_ships
-GROUP BY sourcemmsi,imo,callsign,shipname,shiptype, shiptype_text,cnty, cnty_code ;
+CREATE VIEW ais_data.ships AS
+WITH ships AS (
+         SELECT static_ships.callsign,
+            static_ships.imo,
+            static_ships.sourcemmsi,
+            static_ships.shipname,
+            static_ships.shiptype,
+            static_ships.shiptype_text,
+            SUBSTRING(static_ships.sourcemmsi::text FROM 1 FOR 3)::integer AS mmsi_prefix
+           FROM ais_data.static_ships
+        )
+ SELECT DISTINCT ON (s.sourcemmsi, s.imo, s.shiptype) s.sourcemmsi,
+    s.imo,
+    s.shiptype,
+    s.callsign,
+    s.shipname,
+    s.shiptype_text,
+    c.country AS cnty,
+    c.digit AS cnty_code
+   FROM ships s
+     LEFT JOIN context_data.cnty_codes c ON s.mmsi_prefix = c.digit;
+
 ```
-Grouping by all columns essentially removes duplicates. There are no aggregate functions here (like COUNT, MAX, etc.), so grouping on every selected column returns one row per unique combination of those columns.
+Using the `SELECT DISTINCT` function returns only unique (distinct) rows from the result set of a query. It eliminates duplicate rows, ensuring each row in the output is unique.by all columns essentially removes duplicates. 
 
 ## Task 3!
 Using the view `ais_data.ships`, let´s assess some quality aspects of the static AIS information, as proposed in the following exercise.
@@ -343,14 +342,6 @@ SELECT COUNT(*) FROM ais_data.dynamic_ships;
 ```
 
 
-
-### 4.X  make data temporal
-In order to be able to make queries based on time, use the following query to add a time column.
-
-```sql
-ALTER TABLE ais_data.dynamic_ships ADD COLUMN t timestamp without time zone;
-UPDATE ais_data.dynamic_ships SET t = to_timestamp(datetime,'YYYY-MM-DD HH24:MI:SS.MS');
-```
 
 ### 4.7 Make it faster
 The queries of the previous section may take a while to complete. This is due to the
@@ -432,6 +423,19 @@ SET geom3035 = ST_Transform(geom, 3035)
 WHERE geom IS NOT NULL;
 ```
 
+#### 4.9 Create a table/view with all russian vessels
+```sql
+CREATE TABLE ais_data.russian_vessels AS
+SELECT d.*
+FROM ais_data.dynamic_ships d
+JOIN ais_data.ships s ON d.mmsi = s.sourcemmsi
+WHERE s.cnty_code = 273;
+```
+
+
+##Task 6
+- [ ] Create a table or a materialzed view which contains all the vessels in the so called "Shadow Fleet", and included in your database. Write a couple of sentences explaining your decision. 
+
 ### 5 Spatial queries
 Spatial queries evaluate the relationships that hold among objects’ geometries. PostGIS supports the 8 region connection calculus (RCC8) and the Dimensionally Extended nine-Intersection Model (DE-9IM), and complies with the OGC Simple Feature Access ([20]), which defines the supported routines to test spatial relationships between two geometric objects. PostGIS functions that output a value, either a distance (i.e. ST Distance) or a Boolean value (all the others) are shown in Figure 4. PostGIS functions that output a geometry are shown in Figure 5. All functions can be applied between geometries of various types (i.e. POINTS,LINESTRINGS or POLYGONS), as far as the coordinates of these objects are defined in the same CRS. These spatial relationship functions can be combined with temporal operators, enabling to express complex spatio-temporal queries.
 
@@ -448,13 +452,13 @@ The query in the following SQL example illustrates the use of such spatial funct
 
 
 > [!TIP]
-The distance between ship positions and port locations is calculated using the PostGIS function `ST_dWithin`. The distance threshold (500m) can be visualised by creating a buffer around each port location using the function `ST_Buffer`. 
+The distance between ship positions and port locations is calculated using the PostGIS function `ST_dWithin`. The distance threshold (500m) can be visualised by creating a buffer around each location using the function `ST_Buffer`. 
 
 
 ```sql
 SELECT mmsi, facname, shipname, min_t, max_t, (max_t - min_t) as dur
 FROM (
-SELECT facname, mmsi, min(t) as min_t , max(t) as max_t FROM context_data.oil_gas_infrastructure as q1
+SELECT facname, mmsi, min(datetime) as min_t , max(datetime) as max_t FROM context_data.oil_gas_infrastructure as q1
 INNER JOIN ais_data.dynamic_ships as q2
 ON (
     speed<2
@@ -468,7 +472,7 @@ LEFT JOIN ais_data.ships as q4
 ON (q3.mmsi=q4.sourcemmsi);
 ```
 
-## Task 6!
+## Task 7!
 - [ ] What vessel has been close to Draugen during 11. February? For how long was it within 500, and what type of ship is it?
 - [ ] Visualize the vessels movement during 11. February.
 

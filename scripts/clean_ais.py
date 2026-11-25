@@ -20,8 +20,10 @@ The script:
     the row, so that a valid position is not lost. The emptied values become
     NULL in the database.
   * writes the rows that are kept to the folder "cleaned" inside the folder you
-    gave, with names such as position_2025-10-01.csv. The original files
-    are never changed.
+    gave, split into one subfolder per data type:
+        cleaned/position/position_2025-10-01.csv
+        cleaned/static/static_2025-10-01.csv
+    The original files are never changed.
   * prints how many rows were removed and how many values were emptied, and why
 
 What the script does NOT do (on purpose):
@@ -251,13 +253,13 @@ def find_csv_files(root):
                                if d.lower() != "cleaned" and not d.startswith((".", "_")))
         for f in sorted(files):
             low = f.lower()
-            if low.endswith(".csv") and not low.endswith("_clean.csv") and not f.startswith((".", "_")):
+            if low.endswith(".csv") and not f.startswith((".", "_")):
                 found.append(os.path.join(folder, f))
     return found
 
 
 def output_name(path, kind, parts_in_folder, used):
-    """position_2025-10-01_CLEAN.csv, from the date_utc=... folder if there is one."""
+    """position_2025-10-01.csv, from the date_utc=... folder if there is one."""
     m = re.search(r"date_utc=([0-9-]+)", path.replace("\\", "/"))
     stem = os.path.splitext(os.path.basename(path))[0]
     if m:
@@ -271,7 +273,7 @@ def output_name(path, kind, parts_in_folder, used):
     while name in used:
         name, n = f"{base}_{n}", n + 1
     used.add(name)
-    return name + "_CLEAN.csv"
+    return name + ".csv"
 
 
 def read_header(first_fields):
@@ -314,7 +316,10 @@ def clean_file(path, out_folder, parts_in_folder, used_names, root):
             return None
         check = make_checker(columns)
         out_name = output_name(path, kind, parts_in_folder, used_names)
-        out_path = os.path.join(out_folder, out_name)
+        kind_folder = os.path.join(out_folder, kind)
+        os.makedirs(kind_folder, exist_ok=True)
+        out_path = os.path.join(kind_folder, out_name)
+        out_name = os.path.join(kind, out_name)     # shown in the summary
 
         with open(out_path, "w", encoding="utf-8", newline="") as dst:
             dst.write(",".join(columns) + "\n")

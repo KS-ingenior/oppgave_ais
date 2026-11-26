@@ -1,5 +1,5 @@
 """
-clean_ais.py - clean AIS files from Kystverket before importing them into PostgreSQL.
+clean_ais.py - clean AIS files from Kystverket before importing them into PostgreSQL. 
 
 Usage (in a terminal):
     python clean_ais.py "C:\\path\\to\\ais-data"
